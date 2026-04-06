@@ -108,7 +108,7 @@
         }
 
         container.innerHTML =
-          (article.image ? '<div class="post-image"><figure class="image-anime reveal"><img src="' + article.image + '" alt="' + (article.title || '') + '"></figure></div>' : '') +
+          (article.image ? '<div class="post-image"><figure><img src="' + article.image + '" alt="' + (article.title || '') + '" style="width:100%;border-radius:12px"></figure></div>' : '') +
           '<div class="post-content"><div class="post-entry">' +
             '<h1 class="wow fadeInUp">' + (article.title || '') + '</h1>' +
             (article.date ? '<p class="post-date wow fadeInUp">' + article.date + '</p>' : '') +
