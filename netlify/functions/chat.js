@@ -41,7 +41,7 @@ exports.handler = async function (event) {
   }
 
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-  console.log('API key present:', !!GEMINI_API_KEY, '| All env keys:', Object.keys(process.env).filter(k => k.includes('GEMINI')));
+  console.log('GEMINI present:', !!GEMINI_API_KEY, '| Total env vars:', Object.keys(process.env).length, '| Has SANITY:', !!process.env.SANITY_PROJECT_ID);
   if (!GEMINI_API_KEY) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
   }
