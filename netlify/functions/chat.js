@@ -3,7 +3,7 @@
 // Set env var GEMINI_API_KEY in Netlify dashboard → Site configuration → Environment variables
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY;
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY;
 
 const SYSTEM_PROMPT = `You are Bagani AI, the helpful assistant for Bagani Oil — a premium Filipino lubricants brand made in the Philippines.
 
@@ -67,14 +67,14 @@ exports.handler = async function (event) {
       body: JSON.stringify({
         system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: [{ role: 'user', parts: [{ text: userMessage }] }],
-        generationConfig: { maxOutputTokens: 200, temperature: 0.7 }
+        generationConfig: { maxOutputTokens: 300, temperature: 0.7, candidateCount: 1 }
       })
     });
 
     if (!response.ok) {
       const err = await response.text();
-      console.error('Gemini error:', err);
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'AI service unavailable' }) };
+      console.error('Gemini error status:', response.status, err);
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'AI service unavailable', detail: err }) };
     }
 
     const data = await response.json();
