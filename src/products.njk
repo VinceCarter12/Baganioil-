@@ -4,69 +4,231 @@ title: Products
 activePage: products
 pageHeaderTitle: 'Our <span>Products</span>'
 breadcrumbActive: our products
+pageHeaderBg: /images/our-products.jpg
 ---
 
 {% include "page-header.njk" %}
 
-<!-- Product Categories Start -->
-<div class="page-services">
-    <div class="container">
-        <!-- Product Filter Nav -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="product-categories wow fadeInUp">
-                    <ul>
-                        <li><a href="#" class="active-btn" data-filter="*">All Products</a></li>
-                        <li><a href="#" data-filter=".amihan">Amihan</a></li>
-                        <li><a href="#" data-filter=".laon">Laon</a></li>
-                        <li><a href="#" data-filter=".aman">Aman</a></li>
-                        <li><a href="#" data-filter=".anitun">Anitun</a></li>
-                    </ul>
+<!-- Product Shop Start -->
+<div class="page-services bagani-nike-shop wow fadeInUp">
+    <div class="container nike-shop-container">
+        <!-- TOP BAR -->
+        <div class="nike-shop-topbar">
+            <!-- Product Count -->
+            <div class="topbar-count">
+                All Products (<span id="product-count">{{ productsList | length }}</span>)
+            </div>
+
+            <div class="topbar-actions">
+                <!-- Hide/Show Filters Button -->
+                <button id="toggle-sidebar-btn" class="filter-toggle-btn">
+                    <span id="toggle-filter-text">Hide Filters</span>
+                    <i class="fa-solid fa-sliders"></i>
+                </button>
+
+                <!-- Sort Dropdown -->
+                <div class="sort-dropdown">
+                    <label for="sort-by">Sort By:</label>
+                    <select id="sort-by">
+                        <option value="original-order">Featured</option>
+                        <option value="name">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                    </select>
                 </div>
             </div>
         </div>
 
-        <!-- Product Grid -->
-        <div class="row project-item-boxes" id="sanity-products-grid">
-            {% for product in productsList %}
-            <div class="col-lg-4 col-md-6 project-item-box {{ product.category }}">
-                <div class="product-card wow fadeInUp"{% if loop.index0 % 3 == 1 %} data-wow-delay="0.2s"{% elif loop.index0 % 3 == 2 %} data-wow-delay="0.4s"{% endif %}>
-                    <div class="product-image">
-                        <a href="/products/{{ product.slug }}/">
-                            <img src="{{ product.image }}" alt="Bagani {{ product.name }}">
-                        </a>
-                    </div>
-                    <div class="product-body">
-                        <span class="product-line">{{ product.line }}</span>
-                        <h3>{{ product.name }}</h3>
-                        <p class="product-spec">{{ product.spec }}</p>
-                        <p class="product-desc">{{ product.shortDesc }}</p>
-                    </div>
-                    <div class="product-footer">
-                        <a href="/products/{{ product.slug }}/">View Details <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="nike-shop-main">
+            <!-- LEFT SIDEBAR (Filters) -->
+            <aside class="nike-shop-sidebar" id="nike-sidebar">
+                <button id="mobile-close-sidebar" class="mobile-close-btn d-lg-none"><i class="fa-solid fa-xmark"></i></button>
+                
+                <!-- Group 1: Category / Line -->
+                <div class="filter-group expanded">
+                    <h4 class="filter-title">Category / Line <i class="fa-solid fa-chevron-up toggle-icon"></i></h4>
+                    <div class="filter-body">
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".amihan" class="filter-check">
+                            <span class="checkmark"></span> Amihan
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".laon" class="filter-check">
+                            <span class="checkmark"></span> Laon
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".aman" class="filter-check">
+                            <span class="checkmark"></span> Aman
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".anitun" class="filter-check">
+                            <span class="checkmark"></span> Anitun
+                        </label>
                     </div>
                 </div>
+
+                <!-- Group 2: Viscosity Grade (Placeholders based on spec) -->
+                <div class="filter-group expanded">
+                    <h4 class="filter-title">Viscosity Grade <i class="fa-solid fa-chevron-up toggle-icon"></i></h4>
+                    <div class="filter-body">
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".v10w40" class="filter-check">
+                            <span class="checkmark"></span> 10W-40
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".v20w40" class="filter-check">
+                            <span class="checkmark"></span> 20W-40
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".v0w20" class="filter-check">
+                            <span class="checkmark"></span> 0W-20
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Group 3: Engine Type (Placeholders based on spec) -->
+                <div class="filter-group expanded">
+                    <h4 class="filter-title">Engine Type <i class="fa-solid fa-chevron-up toggle-icon"></i></h4>
+                    <div class="filter-body">
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".4t" class="filter-check">
+                            <span class="checkmark"></span> 4T Motorcycle
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value=".scooter" class="filter-check">
+                            <span class="checkmark"></span> Scooter / Automatic
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- PRODUCT GRID -->
+            <div class="nike-shop-grid">
+                <!-- Adding an overlay to click-close sidebar on mobile -->
+                <div class="mobile-sidebar-overlay" id="mobile-overlay"></div>
+                
+                <div class="row project-item-boxes" id="sanity-products-grid">
+                    {% for product in productsList %}
+                    <div class="col-lg-4 col-md-6 col-sm-12 project-item-box {{ product.category }}" data-name="{{ product.name }}">
+                        <div class="product-card">
+                            <div class="product-card-inner">
+                                <div class="product-badge">{{ product.line }}</div>
+                                <div class="product-image">
+                                    <a href="/products/{{ product.slug }}/">
+                                        <img src="{{ product.image }}" alt="Bagani {{ product.name }}">
+                                    </a>
+                                </div>
+                                <div class="product-body">
+                                    <span class="product-line">{{ product.line }}</span>
+                                    <h3 class="product-name">{{ product.name }}</h3>
+                                    <p class="product-spec">{{ product.spec }}</p>
+                                    <p class="product-desc">{{ product.shortDesc }}</p>
+                                </div>
+                                <div class="product-footer">
+                                    <a href="/products/{{ product.slug }}/" class="product-link">View Details <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            {% endfor %}
         </div>
     </div>
 </div>
-<!-- Product Categories End -->
+<!-- Product Shop End -->
 
 <script>
-// Product Filter with Isotope
-$(document).ready(function() {
+// Product Filter with Isotope (wait for jQuery to load)
+window.addEventListener('load', function() {
     var $grid = $('.project-item-boxes').isotope({
         itemSelector: '.project-item-box',
-        layoutMode: 'fitRows'
+        layoutMode: 'masonry',
+        getSortData: {
+            name: '.product-name'
+        }
     });
 
-    $('.product-categories ul li a').on('click', function(e) {
-        e.preventDefault();
-        var filterValue = $(this).attr('data-filter');
+    // Relayout after images load
+    $grid.find('img').each(function() {
+        var img = this;
+        if (!img.complete) {
+            img.addEventListener('load', function() { $grid.isotope('layout'); });
+            img.addEventListener('error', function() { $grid.isotope('layout'); });
+        }
+    });
+
+    // Sidebar Checkbox Filtering
+    var filters = [];
+    $('.filter-check').on('change', function() {
+        var isChecked = $(this).is(':checked');
+        var val = $(this).val();
+
+        if (isChecked) {
+            filters.push(val);
+        } else {
+            filters = filters.filter(function(v) { return v !== val; });
+        }
+
+        // Logic: combine all checked filters with a comma (OR logic is simplest for Isotope, but AND logic could be done by joining without spaces.)
+        // We use OR logic for checkboxes in same group typically, but Isotope standard is simple. Let's do OR logic:
+        var filterValue = filters.length ? filters.join(', ') : '*';
         $grid.isotope({ filter: filterValue });
-        $('.product-categories ul li a').removeClass('active-btn');
-        $(this).addClass('active-btn');
+
+        // Update product count
+        setTimeout(function() {
+            var visibleItems = $grid.data('isotope').filteredItems.length;
+            $('#product-count').text(visibleItems);
+        }, 100);
+    });
+
+    // Sort Dropdown
+    $('#sort-by').on('change', function() {
+        var sortValue = $(this).val();
+        if(sortValue === 'name') {
+             $grid.isotope({ sortBy: 'name', sortAscending: true });
+        } else if (sortValue === 'name-desc') {
+             $grid.isotope({ sortBy: 'name', sortAscending: false });
+        } else {
+             $grid.isotope({ sortBy: 'original-order' });
+        }
+    });
+
+    // Sidebar Slide Toggle
+    $('#toggle-sidebar-btn').on('click', function() {
+        var $shop = $('.bagani-nike-shop');
+        if (window.innerWidth < 992) {
+            // Mobile: slide in drawer
+            $shop.toggleClass('mobile-sidebar-open');
+        } else {
+            // Desktop: collapse sidebar
+            $shop.toggleClass('sidebar-hidden');
+            if ($shop.hasClass('sidebar-hidden')) {
+                $('#toggle-filter-text').text('Show Filters');
+            } else {
+                $('#toggle-filter-text').text('Hide Filters');
+            }
+            // Trigger Isotope layout recalculation
+            setTimeout(function() { $grid.isotope('layout'); }, 300);
+        }
+    });
+
+    // Mobile Close Action
+    $('#mobile-close-sidebar, #mobile-overlay').on('click', function() {
+        $('.bagani-nike-shop').removeClass('mobile-sidebar-open');
+    });
+
+    // Accordion Logic
+    $('.filter-title').on('click', function() {
+        var $group = $(this).parent('.filter-group');
+        $group.toggleClass('expanded');
+        var $icon = $(this).find('.toggle-icon');
+        if($group.hasClass('expanded')) {
+            $group.find('.filter-body').slideDown(300);
+            $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        } else {
+            $group.find('.filter-body').slideUp(300);
+            $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        }
     });
 });
 </script>

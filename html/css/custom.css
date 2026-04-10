@@ -57,6 +57,26 @@
 	--nike-gutter			: 16px;
 }
 
+html, body {
+	overflow-x: hidden;
+}
+
+/* ── Text Selection Highlight ── */
+::selection {
+	background: #FFC107;
+	color: #222222;
+}
+::-moz-selection {
+	background: #FFC107;
+	color: #222222;
+}
+
+/* ── Active Nav Link ── */
+.nav-link.active,
+.nav-link:focus {
+	color: #FFC107 !important;
+}
+
 @media (min-width: 768px) {
 	:root {
 		--nike-gutter: 24px;
@@ -560,7 +580,7 @@ body{
 	right: 0;
 	bottom: 0;
 	z-index: 9999;
-	background-color: var(--accent-color);
+	background-color: rgb(28,28,28);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -791,33 +811,43 @@ header.main-header{
 	z-index: 100;
 }
 
-header.main-header .header-sticky{
-	position: relative;
-	top: 0;
-	z-index: 100;
+header.main-header .header-sticky {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  border-bottom: none;
+  background: rgb(28,28,28) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  z-index: 1050 !important;
 }
 
-header.main-header .header-sticky.hide{
-	transform: translateY(-100%);
-	transition: transform 0.3s ease-in-out;
-	border-radius: 0;
+header.main-header .header-sticky.hide,
+header.main-header .header-sticky.active {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  background: rgba(28, 28, 28, 0.65) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  animation: slideDownGlass 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-header.main-header .header-sticky.active{
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	border-radius: 0;
-    transform: translateY(0);
-	background: var(--dark-color);
-	border-bottom: 1px solid var(--dark-divider-color);
+@keyframes slideDownGlass {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
 }
 
-.navbar{
-	padding: 10px 0px;
-	align-items: center;
-	background: var(--primary-color);
+.navbar {
+  padding: 10px 0px;
+  align-items: center;
+  background: transparent !important;
+  transition: padding 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 .main-header .header-sticky.active-sticky-header.hide .navbar{
@@ -879,7 +909,7 @@ header.main-header .header-sticky.active{
 .main-menu ul li .nav-link:hover,
 .main-menu ul li .nav-link:focus,
 .main-menu ul li .nav-link.active {
-	color: var(--primary-color);
+	color: var(--accent-color);
 	border-bottom-color: var(--accent-color);
 }
 
@@ -992,6 +1022,28 @@ header.main-header .header-sticky.active{
   position: relative;
 }
 
+.nike-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+}
+
+.nike-nav-icon:hover {
+  background: #333333;
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
 .slicknav_btn {
   background: transparent;
   padding: 5px 10px;
@@ -1015,7 +1067,7 @@ header.main-header .header-sticky.active{
   display: block;
   height: 2px;
   width: 20px;
-  background-color: #111;
+  background-color: #ffffff;
   border-radius: 6px;
   margin: 5px auto !important;
   transition: all 0.2s ease;
@@ -1044,8 +1096,18 @@ header.main-header .header-sticky.active{
 .slicknav_menu{
 	position: absolute;
     width: 100%;
+    left: 0;
+    background: transparent;
 	padding: 0;
-	background: var(--accent-color);
+}
+
+.slicknav_nav {
+    width: calc(100% - 32px);
+    margin: 10px auto !important;
+    padding: 10px 0 !important;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
 }
 
 .slicknav_menu ul{
@@ -1060,25 +1122,25 @@ header.main-header .header-sticky.active{
 .slicknav_nav li a{
 	position: relative;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: 600;
 	text-transform: capitalize;
-	padding: 8px 20px;
-	color: var(--dark-color);
+	padding: 14px 24px;
+	color: #333333;
 	line-height: normal;
-	margin: 0;
-	border-radius: 0 !important;
+	margin: 4px 16px;
+	border-radius: 8px !important;
 	transition: all 0.3s ease-in-out;
 }
 
 .slicknav_nav a:hover,
 .slicknav_nav a:focus,
 .slicknav_nav .slicknav_row:hover{
-	background-color: transparent;
-	color: var(--primary-color);
+	background-color: #FFF8E1;
+	color: #FFB300;
 }
 
 .slicknav_menu ul ul li a{
-    padding: 8px 20px 8px 30px;
+    padding: 12px 24px 12px 40px;
 }
 
 .slicknav_arrow{
@@ -1130,14 +1192,18 @@ header.main-header .header-sticky.active{
     z-index: 1;
 }
 
+.hero.hero-video {
+	clip-path: inset(0); /* Restricts the fixed video to the hero bounds */
+}
+
 .hero.hero-video .hero-bg-video{
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 	left: 0;
-	bottom: 0;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
+	z-index: 0;
 }
 
 .hero.hero-video .hero-bg-video video{
@@ -1448,7 +1514,11 @@ header.main-header .header-sticky.active{
 	border-radius: 24px;
 	padding: 40px 25px;
 	box-shadow: 0px 10px 40px 0px rgba(0,0,0,0.06);
-	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	border-bottom: 1px solid #333;
+  background: #1c1c1c !important;
+  transition: background 0.35s ease,
+              border     0.35s ease,
+              box-shadow 0.35s ease;
 }
 
 .services-list-box .service-item:hover{
@@ -2566,7 +2636,13 @@ header.main-header .header-sticky.active{
 	position: relative;
 	background: url('../images/page-header-bg.jpg') no-repeat center center;
 	background-size: cover;
-	padding: 40px 0; /* Tightened vertical spacing like Nike */
+	padding: 120px 0; /* Restored thicker padding so background is visible */
+}
+
+/* Modifier to remove background image inside product pages only */
+.page-header.product-page-header {
+	background-image: none !important;
+	background-color: var(--primary-color) !important;
 }
 
 .page-header::before{
@@ -2715,6 +2791,14 @@ header.main-header .header-sticky.active{
 	max-width: 40px;
 	margin-right: 20px;
 	transition: all 0.3s ease-in-out;
+}
+
+.main-header .navbar-brand img {
+  max-width: 140px;
+  height: auto;
+  transition: max-width 0.3s cubic-bezier(0.4,0,0.2,1);
+  /* Optional: Invert logo to white if the original is black */
+  filter: brightness(0) invert(1);
 }
 
 .mission-vision-nav ul li .nav-link.active img,
@@ -4891,8 +4975,13 @@ header.main-header .header-sticky.active{
 	}
 }
 
-@media only screen and (max-width: 991px){
-
+@media only screen and (max-width: 991px) {
+  .slicknav_menu .slicknav_icon-bar {
+    background-color: #ffffff !important;
+  }
+	.navbar{
+		display: none;
+	}
 	.btn-default span{
 		padding: 12px 15px;
 	}
@@ -6691,5 +6780,161 @@ header.main-header .header-sticky.active{
   .responsive-menu,
   .navbar-toggle {
     display: block !important;
+  }
+}
+
+/* ── Expandable Search Interaction ── */
+.expandable-search {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+
+.expandable-search-input {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  background-color: rgb(28,28,28);
+  border-radius: 18px;
+  border: 1.5px solid #999; 
+  color: transparent;
+  font-size: 14px;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s, color 0.4s, box-shadow 0.3s, border-color 0.3s;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.expandable-search-input::placeholder {
+  color: transparent;
+  transition: color 0.3s ease-in-out;
+}
+
+.expandable-search-input:focus,
+.expandable-search-input:hover,
+.expandable-search-input:not(:placeholder-shown) {
+  width: 200px;
+  color: #fff;
+  padding: 0 36px 0 16px;
+  cursor: text;
+  border-color: #FFC107;
+}
+
+.expandable-search-input:focus::placeholder,
+.expandable-search-input:hover::placeholder,
+.expandable-search-input:not(:placeholder-shown)::placeholder {
+  color: #888;
+}
+
+.expandable-search-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 12;
+}
+
+.expandable-search-btn i {
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+/* ── Search Dropdown ── */
+.search-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 250px;
+  background-color: rgb(28,28,28);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  text-align: left;
+}
+
+.expandable-search-input:focus ~ .search-dropdown,
+.expandable-search-input:not(:placeholder-shown) ~ .search-dropdown,
+.expandable-search:focus-within .search-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.search-dropdown-title {
+  color: #FFC107;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 8px;
+}
+
+.search-dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-dropdown-list li {
+  margin-bottom: 8px;
+}
+
+.search-dropdown-list li:last-child {
+  margin-bottom: 0;
+}
+
+.search-dropdown-list li a {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.search-dropdown-list li a:hover {
+  color: #FFC107;
+}
+
+@media (max-width: 991px) {
+  #langToggle {
+      display: none !important;
+  }
+  
+  .expandable-search-input:focus,
+  .expandable-search-input:not(:placeholder-shown),
+  .expandable-search:focus-within .expandable-search-input {
+      position: absolute;
+      right: 0; 
+      top: 0;
+      transform: none;
+      width: 210px; /* Fixed width to prevent over-extension */
+      z-index: 10;
+  }
+  
+  .search-dropdown {
+      width: 210px;
+      right: 0;
+      top: calc(100% + 10px);
   }
 }

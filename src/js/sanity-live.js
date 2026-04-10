@@ -132,9 +132,9 @@
       .then(function (products) {
         if (!products || !products.length) return;
 
-        grid.innerHTML = products.map(function (p, i) {
+        grid.innerHTML = products.map(function (p) {
           return '<div class="col-lg-4 col-md-6 project-item-box ' + (p.category || '') + '">' +
-            '<div class="product-card wow fadeInUp" data-wow-delay="' + ((i % 3) * 0.2) + 's">' +
+            '<div class="product-card">' +
               '<div class="product-image"><a href="/products/' + p.slug + '/">' +
                 '<img src="' + (p.image || '') + '" alt="Bagani ' + p.name + '">' +
               '</a></div>' +
@@ -151,18 +151,24 @@
         }).join('');
 
         if (typeof $ !== 'undefined' && $.fn && $.fn.isotope) {
-          setTimeout(function () {
-            var $g = $(grid).isotope({ itemSelector: '.project-item-box', layoutMode: 'fitRows' });
-            $('.product-categories ul li a').off('click.sanity').on('click.sanity', function (e) {
-              e.preventDefault();
-              $g.isotope({ filter: $(this).attr('data-filter') });
-              $('.product-categories ul li a').removeClass('active-btn');
-              $(this).addClass('active-btn');
-            });
-          }, 150);
+          var $g = $(grid).isotope({ itemSelector: '.project-item-box', layoutMode: 'fitRows' });
+          // Relayout after each image loads so card heights are correct
+          $(grid).find('img').each(function () {
+            var img = this;
+            if (img.complete) {
+              $g.isotope('layout');
+            } else {
+              img.addEventListener('load', function () { $g.isotope('layout'); });
+              img.addEventListener('error', function () { $g.isotope('layout'); });
+            }
+          });
+          $('.product-categories ul li a').off('click.sanity').on('click.sanity', function (e) {
+            e.preventDefault();
+            $g.isotope({ filter: $(this).attr('data-filter') });
+            $('.product-categories ul li a').removeClass('active-btn');
+            $(this).addClass('active-btn');
+          });
         }
-
-        reInitWow();
       });
   }
 

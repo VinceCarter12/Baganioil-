@@ -307,6 +307,18 @@
 	transition: -webkit-box-shadow 0.2s;
 	-o-transition: box-shadow 0.2s;
 	-moz-transition: box-shadow 0.2s, -moz-box-shadow 0.2s;
-	transition: box-shadow 0.2s;
 	transition: box-shadow 0.2s, -webkit-box-shadow 0.2s, -moz-box-shadow 0.2s;
+}
+
+/* Bagani Oil - Hide stray cursor dot on mobile and touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .cb-cursor {
+        display: none !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .cb-cursor {
+        display: none !important;
+    }
 }

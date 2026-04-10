@@ -30,7 +30,7 @@
 	
 	/* Slick Menu JS */
 	$('#menu').slicknav({
-		label : 'Menu',
+		label : '',
 		prependTo : '.responsive-menu'
 	});
 

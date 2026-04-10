@@ -24,10 +24,6 @@
 
                 <!-- Right: Action Icons (Nike-style) -->
                 <div class="nike-nav-actions">
-                    <!-- Search toggle -->
-                    <button class="nike-nav-icon nike-search-toggle" id="nikeSearchToggle" aria-label="Search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
                     <!-- Social icons (compact) -->
                     {% if site.social.facebook and site.social.facebook != "#" %}
                     <a href="{{ site.social.facebook }}" class="nike-nav-icon" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
@@ -35,10 +31,26 @@
                     {% if site.social.instagram and site.social.instagram != "#" %}
                     <a href="{{ site.social.instagram }}" class="nike-nav-icon" aria-label="Instagram" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
                     {% endif %}
-                    <!-- CTA button -->
-                    <div class="header-btn nav-shop-btn wow fadeInUp" data-wow-delay="0.4s" style="margin-left: 15px;">
-                        <a href="/products/" class="btn-default"><span data-en="Shop Now" data-tl="Mamili Na">Shop Now</span></a>
+
+                    <!-- Expandable Search -->
+                    <div class="expandable-search" style="margin-left: 8px;">
+                        <input type="text" class="expandable-search-input" placeholder="Search...">
+                        <button class="expandable-search-btn" aria-label="Search" tabindex="-1">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <!-- Most Searched Dropdown -->
+                        <div class="search-dropdown">
+                            <div class="search-dropdown-title">Most Searched</div>
+                            <ul class="search-dropdown-list">
+                                <li><a href="/products/">Performance Engine Oil</a></li>
+                                <li><a href="/about/">About Bagani</a></li>
+                                <li><a href="/store-locator/">Find a Store</a></li>
+                            </ul>
+                        </div>
                     </div>
+
+                    <!-- Language toggle -->
+                    <button id="langToggle" onclick="toggleLang()" title="Switch language" class="preheader-lang-btn" style="margin-left:8px; color: #FFFFFF;">English</button>
                 </div>
 
                 <!-- Mobile: hamburger -->
@@ -46,20 +58,7 @@
             </div>
         </nav>
 
-        <!-- Nike-style search drawer -->
-        <div class="nike-search-drawer" id="nikeSearchDrawer">
-            <div class="container">
-                <div class="nike-search-inner">
-                    <i class="fa-solid fa-magnifying-glass nike-search-icon"></i>
-                    <input type="text" id="nikeSearchInput" placeholder="Search products, news, stores..." autocomplete="off">
-                    <button class="nike-search-close" id="nikeSearchClose" aria-label="Close search">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="responsive-menu"></div>
+<div class="responsive-menu"></div>
     </div>
 </header>
 <!-- Header End -->
