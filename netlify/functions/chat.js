@@ -36,6 +36,10 @@ exports.handler = async function (event) {
     return { statusCode: 204, headers, body: '' };
   }
 
+  if (event.httpMethod === 'GET') {
+    return { statusCode: 200, headers, body: JSON.stringify({ ok: true, service: 'bagani-chat' }) };
+  }
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
