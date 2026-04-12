@@ -6,7 +6,8 @@
       "Bash(grep -rl \"darkModeToggle\" *.html)",
       "Bash(grep -rl \"data-theme\" *.html)",
       "Bash(python3 -c \":*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)"
     ]
   }
 }
