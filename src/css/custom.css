@@ -7708,13 +7708,3 @@ body[data-page="home"] .hero.hero-video {
 	}
 }
 
-/* Hide hero video on mobile — use CSS background fallback instead */
-@media (max-width: 768px) {
-	.hero.hero-video .hero-bg-video {
-		display: none;
-	}
-	.hero.hero-video {
-		background: url('../images/hero-bg.jpg') no-repeat center center;
-		background-size: cover;
-	}
-}
