@@ -8,8 +8,37 @@ activePage: home
 <div class="hero hero-video">
     <!-- Video Start -->
     <div class="hero-bg-video">
-        <video autoplay muted loop playsinline preload="none" id="myVideo"><source src="/videos/hero-bg.mp4" type="video/mp4"></video>
+        <video autoplay muted loop playsinline preload="auto" id="myVideo"><source src="/videos/hero-bg.mp4" type="video/mp4"></video>
     </div>
+    <script>
+    (function() {
+      var v = document.getElementById('myVideo');
+      if (!v) return;
+      v.muted = true;
+      v.defaultMuted = true;
+      function forcePlay() {
+        var p = v.play();
+        if (p !== undefined) {
+          p.catch(function() {
+            v.muted = true;
+            v.play().catch(function(){});
+          });
+        }
+      }
+      if (v.readyState >= 2) {
+        forcePlay();
+      } else {
+        v.addEventListener('canplay', forcePlay, { once: true });
+        v.addEventListener('loadeddata', forcePlay, { once: true });
+      }
+      document.addEventListener('touchstart', function() {
+        if (v.paused) forcePlay();
+      }, { once: true });
+      document.addEventListener('click', function() {
+        if (v.paused) forcePlay();
+      }, { once: true });
+    })();
+    </script>
     <!-- Video End -->
     <div class="container">
         <div class="row">
