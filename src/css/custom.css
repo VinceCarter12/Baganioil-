@@ -7674,3 +7674,47 @@ body[data-page="home"] .hero.hero-video {
         background: transparent; border: none; color: #111111; font-size: 24px; cursor: pointer;
     }
 }
+
+/* =====================================================================
+   PERFORMANCE OPTIMIZATIONS
+   - Disable heavy effects for low-end devices and user preferences
+   ===================================================================== */
+
+/* Disable all animations/transitions for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+	.hero.hero-video .hero-bg-video { display: none; }
+	.parallaxie { background-attachment: scroll !important; }
+}
+
+/* Disable backdrop-filter blur on mobile (expensive GPU operation) */
+@media (max-width: 991px) {
+	header.main-header .header-sticky,
+	header.main-header .header-sticky.hide,
+	header.main-header .header-sticky.active {
+		backdrop-filter: none !important;
+		-webkit-backdrop-filter: none !important;
+	}
+}
+
+/* Disable parallax on mobile (already gated in JS but also disable via CSS) */
+@media (max-width: 991px) {
+	.parallaxie {
+		background-attachment: scroll !important;
+	}
+}
+
+/* Hide hero video on mobile — use CSS background fallback instead */
+@media (max-width: 768px) {
+	.hero.hero-video .hero-bg-video {
+		display: none;
+	}
+	.hero.hero-video {
+		background: url('../images/hero-bg.jpg') no-repeat center center;
+		background-size: cover;
+	}
+}

@@ -8,7 +8,15 @@ activePage: home
 <div class="hero hero-video">
     <!-- Video Start -->
     <div class="hero-bg-video">
-        <video autoplay muted loop playsinline id="myVideo"><source src="/videos/hero-bg.mp4" type="video/mp4"></video>
+        <video autoplay muted loop playsinline preload="none" id="myVideo"><source src="/videos/hero-bg.mp4" type="video/mp4"></video>
+        <script>
+        (function(){
+          if(window.matchMedia('(max-width:768px),(prefers-reduced-data:reduce)').matches){
+            var v=document.getElementById('myVideo');
+            if(v){v.removeAttribute('autoplay');v.pause();}
+          }
+        })();
+        </script>
     </div>
     <!-- Video End -->
     <div class="container">
