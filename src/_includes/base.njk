@@ -40,6 +40,7 @@
 <body data-page="{{ activePage }}">
 
     {% include "preloader.njk" %}
+    <script>if(sessionStorage.getItem('baganiLoaded')){var p=document.querySelector('.preloader');if(p)p.style.display='none';}</script>
 
     <!-- Fixed header wrapper: topbar + navbar -->
     <div id="bagani-header-wrap">
