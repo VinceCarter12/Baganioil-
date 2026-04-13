@@ -33,10 +33,7 @@ export default defineType({
       title: 'Product Line',
       type: 'string',
       group: 'basic',
-      options: {
-        list: ['Amihan', 'Laon', 'Aman', 'Anitun'],
-        layout: 'radio',
-      },
+      description: 'e.g. Amihan, Laon, Aman, Anitun — or any custom line name',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
