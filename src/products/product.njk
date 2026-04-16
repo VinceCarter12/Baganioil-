@@ -118,18 +118,12 @@ eleventyComputed:
                         <p id="preview-description2" class="wow fadeInUp" data-wow-delay="0.2s">{{ product.description2 }}</p>
 
                         <!-- Product Specifications Table -->
-                        <h2 class="wow fadeInUp" data-wow-delay="0.3s">Product <span>Specifications</span></h2>
-
-                        <table class="product-specs-table wow fadeInUp" data-wow-delay="0.4s">
-                            <tbody id="preview-specs-body">
-                                {% for key, value in product.specs %}
-                                <tr>
-                                    <th>{{ key }}</th>
-                                    <td>{{ value }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div id="specs-section" style="display:none;">
+                            <h2 class="wow fadeInUp" data-wow-delay="0.3s">Product <span>Specifications</span></h2>
+                            <table class="product-specs-table wow fadeInUp" data-wow-delay="0.4s">
+                                <tbody id="preview-specs-body"></tbody>
+                            </table>
+                        </div>
 
                         <!-- Key Features -->
                         {% if product.features and product.features.length > 0 %}
@@ -240,10 +234,12 @@ eleventyComputed:
       if (desc2 && p.description2) desc2.textContent = p.description2;
 
       var specsBody = document.getElementById('preview-specs-body');
+      var specsSection = document.getElementById('specs-section');
       if (specsBody && p.specs && p.specs.length) {
         specsBody.innerHTML = p.specs.map(function (s) {
           return '<tr><th>' + (s.key || '') + '</th><td>' + (s.value || '') + '</td></tr>';
         }).join('');
+        if (specsSection) specsSection.style.display = '';
       }
 
       var featuresEl = document.getElementById('preview-features');
