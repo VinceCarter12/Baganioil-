@@ -456,9 +456,12 @@
     var grid = document.querySelector('.project-item-boxes');
     if (!grid) return;
 
-    sanityFetch('*[_type == "product" && slug.current in ["amihan-2t-200ml","amihan-2t-1l","amihan-gust-4t","amihan-gale-4t"]] | order(line asc, name asc) { "slug": slug.current, name, line, category, spec, shortDesc, "image": image.asset->url }')
+    sanityFetch('*[_type == "product"] | order(line asc, name asc) { "slug": slug.current, name, line, category, spec, shortDesc, "image": image.asset->url }')
       .then(function (products) {
         if (!products || !products.length) return;
+
+        var countEl = document.getElementById('product-count');
+        if (countEl) countEl.textContent = products.length;
 
         grid.innerHTML = products.map(function (p) {
           return '<div class="col-lg-4 col-md-6 project-item-box ' + (p.category || '') + '">' +
