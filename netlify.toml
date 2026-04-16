@@ -10,6 +10,12 @@
 [functions]
   directory = "netlify/functions"
 
+[dev]
+  command = "npm run start:11ty"
+  targetPort = 8080
+  port = 8888
+  publish = "_site"
+
 [[headers]]
   for = "/js/*"
   [headers.values]
@@ -39,13 +45,6 @@
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
-
-# Pass through Netlify internal APIs (Identity, Git Gateway, Functions)
-[[redirects]]
-  from = "/.netlify/*"
-  to = "/.netlify/:splat"
-  status = 200
-  force = true
 
 [[redirects]]
   from = "/*"

@@ -22,6 +22,64 @@ async function fetchRssText(url) {
 	}
 }
 
+function normalizeYoutubeEmbed(url) {
+	if (!url) return null;
+	const idMatch = url.match(/(?:youtube\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/i);
+	if (!idMatch || !idMatch[1]) return null;
+	return `https://www.youtube.com/embed/${idMatch[1]}?rel=0`;
+}
+
+async function fetchArticleMedia(url) {
+	try {
+		const res = await fetch(url, {
+			headers: {
+				'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+				'Accept': 'text/html,application/xhtml+xml',
+				'Accept-Language': 'en-US,en;q=0.9',
+			},
+			signal: AbortSignal.timeout(5000),
+		});
+		if (!res.ok) return { image: null, videoEmbed: null };
+
+		const html = await res.text();
+		const yt = html.match(/(?:youtube\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/i);
+		if (yt && yt[1]) {
+			return {
+				image: `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg`,
+				videoEmbed: `https://www.youtube.com/embed/${yt[1]}?rel=0`,
+				description: null,
+			};
+		}
+
+		const ogImage = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+			|| html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+		const ogVideo = html.match(/<meta[^>]+property=["']og:video(?::url)?["'][^>]+content=["']([^"']+)["']/i)
+			|| html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:video(?::url)?["']/i);
+		const twImage = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
+			|| html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
+		const ogDescription = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i)
+			|| html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:description["']/i);
+		const twDescription = html.match(/<meta[^>]+name=["']twitter:description["'][^>]+content=["']([^"']+)["']/i)
+			|| html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:description["']/i);
+		const metaDescription = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i)
+			|| html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i);
+		const bestDescription = String(
+			(ogDescription && ogDescription[1])
+			|| (twDescription && twDescription[1])
+			|| (metaDescription && metaDescription[1])
+			|| ''
+		).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+		return {
+			image: (ogImage && ogImage[1]) || (twImage && twImage[1]) || null,
+			videoEmbed: normalizeYoutubeEmbed(ogVideo && ogVideo[1] ? ogVideo[1] : null),
+			description: bestDescription || null,
+		};
+	} catch {
+		return { image: null, videoEmbed: null, description: null };
+	}
+}
+
 function parseRssItems(xml) {
 	const items = [];
 	const itemRegex = /<item>([\s\S]*?)<\/item>/g;
@@ -79,6 +137,24 @@ function parseRssItems(xml) {
 function isOilRelated(item) {
 	const text = (item.title + ' ' + item.description).toLowerCase();
 	return OIL_KEYWORDS.some((kw) => text.includes(kw));
+}
+
+function createNewsSummary(input, maxChars = 520) {
+	const text = String(input || '').replace(/\s+/g, ' ').trim();
+	if (!text) return '';
+	if (text.length <= maxChars) return text;
+
+	const sentenceCut = text.lastIndexOf('. ', maxChars);
+	if (sentenceCut >= Math.floor(maxChars * 0.55)) {
+		return text.slice(0, sentenceCut + 1).trim();
+	}
+
+	const wordCut = text.lastIndexOf(' ', maxChars);
+	if (wordCut > 0) {
+		return text.slice(0, wordCut).trim().replace(/[,:;\-]+$/, '') + '...';
+	}
+
+	return text.slice(0, maxChars).trim() + '...';
 }
 
 // Sanity client — only created when SANITY_PROJECT_ID env var is set
@@ -246,7 +322,8 @@ module.exports = function (eleventyConfig) {
 					title: item.title,
 					date: item.pubDate ? new Date(item.pubDate).toISOString() : null,
 					image: item.image || null,
-					excerpt: item.description.slice(0, 220),
+					videoEmbed: null,
+					excerpt: createNewsSummary(item.description || ''),
 					tags: ['Oil & Gas'],
 					isExternal: true,
 					url: item.url,
@@ -258,11 +335,22 @@ module.exports = function (eleventyConfig) {
 		// Sort newest first, deduplicate by title
 		all.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 		const seen = new Set();
-		return all.filter((item) => {
+		const deduped = all.filter((item) => {
 			if (seen.has(item.title)) return false;
 			seen.add(item.title);
 			return true;
 		});
+
+		await Promise.all(deduped.map(async (item) => {
+			if (!item.url) return;
+			const media = await fetchArticleMedia(item.url);
+			if (media.videoEmbed) item.videoEmbed = media.videoEmbed;
+			if (media.image) item.image = media.image;
+			const summarySource = media.description || item.excerpt || '';
+			item.excerpt = createNewsSummary(summarySource);
+		}));
+
+		return deduped;
 	});
 
 	// News articles: Sanity first, no local fallback (hardcoded in template previously)
@@ -275,6 +363,7 @@ module.exports = function (eleventyConfig) {
 						"slug": slug.current,
 						title,
 						date,
+						category,
 						"image": image.asset->url,
 						excerpt,
 						tags,

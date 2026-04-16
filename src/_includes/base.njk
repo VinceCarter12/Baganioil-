@@ -560,6 +560,13 @@
     })();
     </script>
     {% endif %}
+    <div id="extNewsModal" class="ext-news-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="External news details">
+      <div class="ext-news-modal-box">
+        <button class="ext-news-modal-close" id="extNewsModalClose" type="button" aria-label="Close">&times;</button>
+        <div id="extNewsModalBody"></div>
+      </div>
+    </div>
+
     <!-- Sanity Live: client-side content fetching -->
     <script src="/js/sanity-live.js?v={{ buildVersion }}"></script>
 </body>

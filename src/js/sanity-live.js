@@ -22,21 +22,57 @@
   }
 
   function sanityFetch(query) {
-    // Use api.sanity.io (not CDN) for previewDrafts perspective
-    var host = IS_PREVIEW
-      ? 'https://' + PROJECT_ID + '.api.sanity.io'
-      : 'https://' + PROJECT_ID + '.apicdn.sanity.io';
-    var url = host + '/v' + API_VER + '/data/query/' + DATASET + '?query=' + encodeURIComponent(query);
-    if (IS_PREVIEW) url += '&perspective=previewDrafts';
+    var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-    var opts = {};
-    if (IS_PREVIEW && PREVIEW_TOKEN) {
-      opts.headers = { 'Authorization': 'Bearer ' + PREVIEW_TOKEN };
+    function parseResult(r) {
+      if (!r.ok) throw new Error('sanity fetch failed: ' + r.status);
+      return r.json().then(function (d) { return d.result; });
     }
 
-    return fetch(url, opts)
-      .then(function (r) { return r.json(); })
-      .then(function (d) { return d.result; });
+    var proxyPath = '/.netlify/functions/sanity-query'
+      + '?projectId=' + encodeURIComponent(PROJECT_ID)
+      + '&dataset=' + encodeURIComponent(DATASET)
+      + '&apiVer=' + encodeURIComponent(API_VER)
+      + '&preview=' + (IS_PREVIEW ? 'true' : 'false')
+      + '&query=' + encodeURIComponent(query);
+
+    if (IS_PREVIEW && PREVIEW_TOKEN) {
+      proxyPath += '&token=' + encodeURIComponent(PREVIEW_TOKEN);
+    }
+
+    var proxyCandidates = [proxyPath];
+    if (window.location.hostname === 'localhost' && window.location.port !== '8888') {
+      proxyCandidates.push('http://localhost:8888' + proxyPath);
+    }
+
+    function tryProxy(index) {
+      if (index >= proxyCandidates.length) return Promise.reject(new Error('proxy unavailable'));
+      return fetch(proxyCandidates[index]).then(function (r) {
+        return parseResult(r);
+      }).catch(function () {
+        return tryProxy(index + 1);
+      });
+    }
+
+    return tryProxy(0).catch(function () {
+      if (isLocalhost) {
+        throw new Error('Local proxy unavailable. Run Netlify dev (npm start) so /.netlify/functions endpoints are served.');
+      }
+
+      // Final fallback keeps existing behavior in environments without function proxy.
+      var host = IS_PREVIEW
+        ? 'https://' + PROJECT_ID + '.api.sanity.io'
+        : 'https://' + PROJECT_ID + '.apicdn.sanity.io';
+      var url = host + '/v' + API_VER + '/data/query/' + DATASET + '?query=' + encodeURIComponent(query);
+      if (IS_PREVIEW) url += '&perspective=previewDrafts';
+
+      var opts = {};
+      if (IS_PREVIEW && PREVIEW_TOKEN) {
+        opts.headers = { 'Authorization': 'Bearer ' + PREVIEW_TOKEN };
+      }
+
+      return fetch(url, opts).then(parseResult);
+    });
   }
 
   function reInitWow() {
@@ -50,6 +86,15 @@
     return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   }
 
+  function formatDateParts(raw) {
+    if (!raw) return null;
+    var d = new Date(raw);
+    return {
+      day: String(d.getDate()).padStart(2, '0'),
+      month: d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()
+    };
+  }
+
   function articleHref(a) {
     return a.isExternal ? a.url : '/news/article/?s=' + encodeURIComponent(a.slug);
   }
@@ -60,7 +105,87 @@
     return a.isExternal ? (a.source || 'Oil & Gas') : ((a.tags && a.tags[0]) ? a.tags[0] : 'News');
   }
 
-  var EXTERNAL_NEWS_CACHE_KEY = 'bagani-external-news-cache';
+  function escHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function decodeHtmlEntities(str) {
+    if (!str) return '';
+    var ta = document.createElement('textarea');
+    ta.innerHTML = str;
+    return ta.value;
+  }
+
+  function openExtNewsModal(data) {
+    var overlay = document.getElementById('extNewsModal');
+    var body = document.getElementById('extNewsModalBody');
+    if (!overlay || !body) return;
+
+    var date = formatDate(data.date);
+    var title = escHtml(data.title || 'Untitled');
+    var source = escHtml(data.source || 'News');
+    var excerpt = escHtml(decodeHtmlEntities(data.excerpt || ''));
+    var excerptHtml = excerpt
+      ? '<div class="ext-news-modal-excerpt">' + excerpt.replace(/\n/g, '<br>') + '</div>'
+      : '';
+    var heroImage = escHtml(data.image || '/images/post-1.jpg');
+    var videoEmbed = data.videoEmbed || '';
+
+    var heroHtml = '';
+    if (videoEmbed) {
+      heroHtml = '<div class="ext-news-modal-hero ext-news-modal-hero--video">' +
+        '<iframe class="ext-news-modal-video" src="' + escHtml(videoEmbed) + '" allowfullscreen loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>' +
+        '<div class="ext-news-modal-hero-meta ext-news-modal-hero-meta--video">' +
+          '<span class="ext-news-modal-source">' + source + '</span>' +
+          (date ? '<span class="ext-news-modal-date"><i class="fa-regular fa-calendar"></i> ' + date + '</span>' : '') +
+        '</div>' +
+      '</div>';
+    } else {
+      heroHtml = '<div class="ext-news-modal-hero">' +
+        '<img class="ext-news-modal-img" src="' + heroImage + '" alt="' + title + '" loading="lazy" onerror="this.onerror=null;this.src=\'/images/post-1.jpg\';">' +
+        '<div class="ext-news-modal-hero-overlay"></div>' +
+        '<div class="ext-news-modal-hero-meta">' +
+          '<span class="ext-news-modal-source">' + source + '</span>' +
+          (date ? '<span class="ext-news-modal-date"><i class="fa-regular fa-calendar"></i> ' + date + '</span>' : '') +
+        '</div>' +
+      '</div>';
+    }
+
+    body.innerHTML = heroHtml +
+      '<div class="ext-news-modal-content">' +
+        '<h3 class="ext-news-modal-title">' + title + '</h3>' +
+        '<div class="ext-news-modal-divider"></div>' +
+        excerptHtml +
+      '</div>';
+
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeExtNewsModal() {
+    var overlay = document.getElementById('extNewsModal');
+    var body = document.getElementById('extNewsModalBody');
+    if (!overlay) return;
+
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+
+    if (body) {
+      // Drop iframe to stop playback immediately on close.
+      body.innerHTML = '';
+    }
+  }
+
+  var _extModalEventsBound = false;
+
+  var EXTERNAL_NEWS_CACHE_KEY = 'bagani-external-news-cache-v8';
   var EXTERNAL_NEWS_CACHE_TTL_MS = 30 * 60 * 1000;
 
   function readExternalNewsCache() {
@@ -117,10 +242,26 @@
       });
   }
 
-  var BAGANI_LATEST_PAGE_SIZE = 8;
+  var BAGANI_UPDATES_PAGE_SIZE = 9;
   var EXTERNAL_NEWS_PAGE_SIZE = 6;
-  var _newsPaginationState = { baganiPage: 1, externalPage: 1 };
+  var _newsPaginationState = { baganiPage: 1, externalPage: 1, baganiFilter: 'all' };
   var _newsDataCache = null;
+
+  function normalizeBaganiCategory(article) {
+    var raw = (article && (article.category || (article.tags && article.tags[0]))) || '';
+    var key = String(raw).trim().toLowerCase();
+    if (key === 'announcement' || key === 'announcements') return 'Announcement';
+    if (key === 'event' || key === 'events') return 'Event';
+    if (key === 'article' || key === 'articles' || key === 'blog' || key === 'blogs') return 'Article';
+    if (key === 'update' || key === 'updates') return 'Updates';
+    if (key === 'news') return 'News';
+    return 'News';
+  }
+
+  function baganiCategoryClass(category) {
+    var c = normalizeBaganiCategory({ category: category });
+    return 'bagani-type-' + c.toLowerCase();
+  }
 
   function clampPage(page, total) {
     if (total < 1) return 1;
@@ -151,13 +292,44 @@
     var refreshBtn = document.getElementById('refreshExternalNewsBtn');
     if (refreshBtn) {
       refreshBtn.addEventListener('click', function () {
-        if (refreshBtn.dataset.loading === '1') return;
-        refreshBtn.dataset.loading = '1';
+        if (refreshBtn.disabled) return;
+        refreshBtn.disabled = true;
         refreshBtn.classList.add('is-loading');
+        var icon = refreshBtn.querySelector('i');
+        if (icon) icon.classList.add('fa-spin');
         var label = refreshBtn.querySelector('.refresh-news-label');
         if (label) label.textContent = 'Refreshing...';
         _newsPaginationState.externalPage = 1;
-        initNews(true);
+
+        var _refreshStart = Date.now();
+        var MIN_LOADING_MS = 800;
+
+        fetchExternalNewsLive({ forceRefresh: true })
+          .then(function (items) {
+            var elapsed = Date.now() - _refreshStart;
+            var delay = Math.max(0, MIN_LOADING_MS - elapsed);
+            setTimeout(function () {
+              if (_newsDataCache) {
+                _newsDataCache.external = items;
+                renderNewsGrid(_newsDataCache.bagani, _newsDataCache.external);
+              } else {
+                initNews(false);
+              }
+            }, delay);
+          })
+          .catch(function () {
+            setTimeout(function () {
+              var btn = document.getElementById('refreshExternalNewsBtn');
+              if (btn) {
+                btn.disabled = false;
+                btn.classList.remove('is-loading');
+                var ico = btn.querySelector('i');
+                if (ico) ico.classList.remove('fa-spin');
+                var lbl = btn.querySelector('.refresh-news-label');
+                if (lbl) lbl.textContent = 'Refresh News';
+              }
+            }, Math.max(0, MIN_LOADING_MS - (Date.now() - _refreshStart)));
+          });
       });
     }
 
@@ -169,14 +341,93 @@
         if (!target || isNaN(page)) return;
         if (btn.hasAttribute('disabled')) return;
 
+        var externalSectionTop = null;
+        if (target === 'external') {
+          var externalSection = document.querySelector('.mag-industry-section');
+          if (externalSection) {
+            externalSectionTop = externalSection.getBoundingClientRect().top + window.pageYOffset;
+          }
+        }
+
         if (target === 'bagani') _newsPaginationState.baganiPage = page;
         if (target === 'external') _newsPaginationState.externalPage = page;
 
         if (_newsDataCache) {
           renderNewsGrid(_newsDataCache.bagani, _newsDataCache.external);
+
+          if (target === 'external') {
+            requestAnimationFrame(function () {
+              var intro = document.querySelector('.mag-industry-section .news-section-intro');
+              if (intro) {
+                var y = intro.getBoundingClientRect().top + window.pageYOffset - 12;
+                window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
+              } else if (externalSectionTop !== null) {
+                window.scrollTo({ top: Math.max(0, externalSectionTop - 12), behavior: 'auto' });
+              }
+            });
+          }
         }
       });
     });
+
+    var filterButtons = document.querySelectorAll('[data-news-filter]');
+    filterButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var filter = btn.getAttribute('data-news-filter') || 'all';
+        _newsPaginationState.baganiFilter = filter;
+        _newsPaginationState.baganiPage = 1;
+        if (_newsDataCache) renderNewsGrid(_newsDataCache.bagani, _newsDataCache.external);
+      });
+    });
+
+    var newsGrid = document.getElementById('sanity-news-grid');
+    if (newsGrid) {
+      newsGrid.addEventListener('click', function (e) {
+        var card = e.target.closest('.news-feed-item[data-ext-title]');
+        if (!card) return;
+        openExtNewsModal({
+          title: card.getAttribute('data-ext-title'),
+          source: card.getAttribute('data-ext-source'),
+          date: card.getAttribute('data-ext-date'),
+          image: card.getAttribute('data-ext-image'),
+          excerpt: card.getAttribute('data-ext-excerpt'),
+          videoEmbed: card.getAttribute('data-ext-video') || null,
+        });
+      });
+
+      newsGrid.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var card = e.target.closest('.news-feed-item[data-ext-title]');
+        if (!card) return;
+        e.preventDefault();
+        openExtNewsModal({
+          title: card.getAttribute('data-ext-title'),
+          source: card.getAttribute('data-ext-source'),
+          date: card.getAttribute('data-ext-date'),
+          image: card.getAttribute('data-ext-image'),
+          excerpt: card.getAttribute('data-ext-excerpt'),
+          videoEmbed: card.getAttribute('data-ext-video') || null,
+        });
+      });
+    }
+
+    if (!_extModalEventsBound) {
+      _extModalEventsBound = true;
+
+      var modalClose = document.getElementById('extNewsModalClose');
+      if (modalClose) modalClose.addEventListener('click', closeExtNewsModal);
+
+      var modalOverlay = document.getElementById('extNewsModal');
+      if (modalOverlay) {
+        modalOverlay.addEventListener('click', function (e) {
+          if (e.target === modalOverlay) closeExtNewsModal();
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeExtNewsModal();
+      });
+    }
   }
 
   function renderNewsGrid(baganiArticles, external) {
@@ -185,123 +436,86 @@
 
     var html = '';
 
-    // ── BAGANI NEWS & ANNOUNCEMENTS ───────────────────────────────────────
+    // ── BAGANI UPDATES ────────────────────────────────────────────────────
     html += '<div class="col-12">' +
       '<div class="news-section-intro">' +
-        '<div class="news-section-eyebrow">Official</div>' +
-        '<h2 class="news-section-heading">Bagani <span>News</span></h2>' +
-        '<div class="news-section-rule"></div>' +
+        '<div class="news-section-eyebrow wow fadeInDown" data-wow-duration="0.6s">From Bagani</div>' +
+        '<h2 class="news-section-heading wow fadeInDown" data-wow-duration="0.7s" data-wow-delay="0.1s">Bagani <span>Updates</span></h2>' +
+        '<p class="news-section-desc wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">Events, articles, announcements, and brand news in one clean feed.</p>' +
       '</div>' +
     '</div>';
 
     if (!baganiArticles.length) {
-      html += '<div class="col-12 text-center py-4">' +
-        '<p style="color:#888">No announcements published yet.</p>' +
-      '</div>';
-    } else {
-      var feat = baganiArticles[0];
-      var featHref = '/news/article/?s=' + encodeURIComponent(feat.slug);
-      var featTag = (feat.tags && feat.tags[0]) ? feat.tags[0] : 'News';
-      var featImg = feat.image || '/images/post-1.jpg';
-      var featDate = formatDate(feat.date);
-
-      var sidebarHtml = baganiArticles.slice(1, 4).map(function (a) {
-        var href = '/news/article/?s=' + encodeURIComponent(a.slug);
-        var tag = (a.tags && a.tags[0]) ? a.tags[0] : 'News';
-        var img = a.image || '/images/post-1.jpg';
-        var date = formatDate(a.date);
-        return '<article class="mag-sidebar-item">' +
-          '<div class="mag-sidebar-body">' +
-            '<span class="mag-tag mag-tag-sm">' + tag + '</span>' +
-            '<h3 class="mag-sidebar-title"><a href="' + href + '">' + (a.title || 'Untitled') + '</a></h3>' +
-            (a.excerpt ? '<p class="mag-sidebar-excerpt">' + a.excerpt + '</p>' : '') +
-            (date ? '<span class="mag-sidebar-date"><i class="fa-regular fa-calendar"></i> ' + date + '</span>' : '') +
-          '</div>' +
-          '<a href="' + href + '" class="mag-sidebar-thumb">' +
-            '<img src="' + img + '" alt="' + (a.title || '') + '" loading="lazy">' +
-          '</a>' +
-        '</article>';
+      var emptyCategoryOrder = ['Announcement', 'Article', 'Event', 'Updates', 'News'];
+      var emptyFilter = _newsPaginationState.baganiFilter || 'all';
+      var emptyChipsHtml = '<button class="bagani-filter-chip' + (emptyFilter === 'all' ? ' is-active' : '') + '" data-news-filter="all">All <span>0</span></button>';
+      emptyChipsHtml += emptyCategoryOrder.map(function (cat) {
+        var key = cat.toLowerCase();
+        return '<button class="bagani-filter-chip' + (emptyFilter === key ? ' is-active' : '') + '" data-news-filter="' + key + '">' + cat + ' <span>0</span></button>';
       }).join('');
 
-      html += '<div class="col-12">' +
-        '<div class="row g-0 mag-top-row">' +
-          '<div class="col-lg-7 mag-featured-col">' +
-            '<article class="mag-featured">' +
-              '<a href="' + featHref + '" class="mag-featured-img">' +
-                '<img src="' + featImg + '" alt="' + (feat.title || '') + '" loading="lazy">' +
-              '</a>' +
-              '<div class="mag-featured-body">' +
-                '<div class="mag-meta">' +
-                  '<span class="mag-tag">' + featTag + '</span>' +
-                  (featDate ? '<span class="mag-meta-date"><i class="fa-regular fa-calendar"></i> ' + featDate + '</span>' : '') +
-                '</div>' +
-                '<h2 class="mag-featured-title"><a href="' + featHref + '">' + (feat.title || 'Untitled') + '</a></h2>' +
-                (feat.excerpt ? '<p class="mag-excerpt">' + feat.excerpt + '</p>' : '') +
-                '<a href="' + featHref + '" class="mag-readmore">Read Article <i class="fa-solid fa-arrow-right"></i></a>' +
-              '</div>' +
-            '</article>' +
-          '</div>' +
-          '<div class="col-lg-5 mag-sidebar-col">' +
-            '<div class="mag-sidebar">' + sidebarHtml + '</div>' +
-          '</div>' +
-        '</div>' +
+      html += '<div class="col-12"><div class="bagani-filter-wrap wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.15s">' + emptyChipsHtml + '</div></div>';
+      html += '<div class="col-12 text-center py-4">' +
+        '<p style="color:#888">No updates published yet.</p>' +
       '</div>';
+    } else {
+      var categoryOrder = ['Announcement', 'Article', 'Event', 'Updates', 'News'];
+      var categoryCounts = { Announcement: 0, Event: 0, Article: 0, Updates: 0, News: 0 };
+      baganiArticles.forEach(function (a) {
+        var type = normalizeBaganiCategory(a);
+        categoryCounts[type] = (categoryCounts[type] || 0) + 1;
+      });
 
-      var overlayItems = baganiArticles.slice(4, 6);
-      if (overlayItems.length) {
-        var overlayHtml = overlayItems.map(function (a) {
+      var activeFilter = _newsPaginationState.baganiFilter || 'all';
+      var filtered = baganiArticles.filter(function (a) {
+        if (activeFilter === 'all') return true;
+        return normalizeBaganiCategory(a).toLowerCase() === activeFilter;
+      });
+
+      var chipsHtml = '<button class="bagani-filter-chip' + (activeFilter === 'all' ? ' is-active' : '') + '" data-news-filter="all">All <span>' + baganiArticles.length + '</span></button>';
+      chipsHtml += categoryOrder.map(function (cat) {
+        var key = cat.toLowerCase();
+        return '<button class="bagani-filter-chip' + (activeFilter === key ? ' is-active' : '') + '" data-news-filter="' + key + '">' + cat + ' <span>' + (categoryCounts[cat] || 0) + '</span></button>';
+      }).join('');
+
+      html += '<div class="col-12"><div class="bagani-filter-wrap wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.15s">' + chipsHtml + '</div></div>';
+
+      var baganiTotalPages = Math.ceil(filtered.length / BAGANI_UPDATES_PAGE_SIZE) || 1;
+      _newsPaginationState.baganiPage = clampPage(_newsPaginationState.baganiPage, baganiTotalPages);
+      var baganiStart = (_newsPaginationState.baganiPage - 1) * BAGANI_UPDATES_PAGE_SIZE;
+      var baganiPaged = filtered.slice(baganiStart, baganiStart + BAGANI_UPDATES_PAGE_SIZE);
+
+      if (!baganiPaged.length) {
+        html += '<div class="col-12 text-center py-4"><p style="color:#888">No updates in this category yet.</p></div>';
+      } else {
+        var baganiCardsHtml = baganiPaged.map(function (a, bi) {
           var href = '/news/article/?s=' + encodeURIComponent(a.slug);
-          var tag = (a.tags && a.tags[0]) ? a.tags[0] : 'News';
-          var img = a.image || '/images/post-1.jpg';
-          return '<div class="col-lg-6 col-md-6">' +
-            '<article class="mag-overlay-card">' +
-              '<a href="' + href + '" class="mag-overlay-img">' +
-                '<img src="' + img + '" alt="' + (a.title || '') + '" loading="lazy">' +
-              '</a>' +
-              '<div class="mag-overlay-body">' +
-                '<span class="mag-tag">' + tag + '</span>' +
-                '<h3 class="mag-overlay-title"><a href="' + href + '">' + (a.title || 'Untitled') + '</a></h3>' +
-                (a.excerpt ? '<p class="mag-overlay-excerpt">' + a.excerpt + '</p>' : '') +
-                '<a href="' + href + '" class="mag-readmore mag-readmore-sm">Read Article <i class="fa-solid fa-arrow-right"></i></a>' +
-              '</div>' +
-            '</article>' +
-          '</div>';
-        }).join('');
-
-        html += '<div class="col-12"><div class="row g-0 mag-overlay-row">' + overlayHtml + '</div></div>';
-      }
-
-      var latestItems = baganiArticles.slice(6);
-      if (latestItems.length) {
-        var latestTotalPages = Math.ceil(latestItems.length / BAGANI_LATEST_PAGE_SIZE);
-        _newsPaginationState.baganiPage = clampPage(_newsPaginationState.baganiPage, latestTotalPages);
-        var latestStart = (_newsPaginationState.baganiPage - 1) * BAGANI_LATEST_PAGE_SIZE;
-        var latestPagedItems = latestItems.slice(latestStart, latestStart + BAGANI_LATEST_PAGE_SIZE);
-
-        var latestHtml = latestPagedItems.map(function (a) {
-          var href = '/news/article/?s=' + encodeURIComponent(a.slug);
-          var tag = (a.tags && a.tags[0]) ? a.tags[0] : 'News';
-          var img = a.image || '/images/post-1.jpg';
+          var type = normalizeBaganiCategory(a);
+          var title = escHtml(a.title || 'Untitled');
+          var img = escHtml(a.image || '/images/post-1.jpg');
+          var excerpt = a.excerpt ? escHtml(decodeHtmlEntities(a.excerpt)) : '';
           var date = formatDate(a.date);
-          return '<div class="col-lg-3 col-md-6 col-6">' +
-            '<article class="mag-latest-item">' +
-              '<a href="' + href + '" class="mag-latest-img">' +
-                '<img src="' + img + '" alt="' + (a.title || '') + '" loading="lazy">' +
+          var bDelay = (bi * 0.08).toFixed(2);
+
+          return '<div class="col-xl-4 col-md-6 col-12 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="' + bDelay + 's">' +
+            '<article class="news-feed-item news-feed-item--stack news-feed-item--bagani">' +
+              '<a class="news-feed-thumb news-feed-thumb--stack" href="' + href + '">' +
+                '<img src="' + img + '" alt="' + title + '" loading="lazy" onerror="this.onerror=null;this.src=\'/images/post-1.jpg\';">' +
               '</a>' +
-              '<div class="mag-latest-body">' +
-                '<span class="mag-tag mag-tag-sm">' + tag + '</span>' +
-                '<h4 class="mag-latest-title"><a href="' + href + '">' + (a.title || 'Untitled') + '</a></h4>' +
-                (date ? '<span class="mag-latest-date"><i class="fa-regular fa-calendar"></i> ' + date + '</span>' : '') +
+              '<div class="news-feed-body news-feed-body--stack">' +
+                '<div class="news-feed-meta">' +
+                  '<span class="news-feed-source">' + type + '</span>' +
+                  (date ? '<span class="news-feed-date"><i class="fa-regular fa-calendar"></i> ' + date + '</span>' : '') +
+                '</div>' +
+                '<h4 class="news-feed-title"><a href="' + href + '">' + title + '</a></h4>' +
+                (excerpt ? '<p class="news-feed-excerpt">' + excerpt + '</p>' : '') +
+                '<a class="news-feed-link" href="' + href + '">Open Article <i class="fa-solid fa-arrow-up-right-from-square"></i></a>' +
               '</div>' +
             '</article>' +
           '</div>';
         }).join('');
 
-        html += '<div class="col-12 mag-latest-section">' +
-          '<div class="mag-latest-header"><h2>More Announcements</h2><div class="mag-latest-line"></div></div>' +
-          '<div class="row g-4 mag-latest-row">' + latestHtml + '</div>' +
-          renderPager('bagani', _newsPaginationState.baganiPage, latestTotalPages) +
-        '</div>';
+        html += '<div class="col-12"><div class="row g-4">' + baganiCardsHtml + '</div>' + renderPager('bagani', _newsPaginationState.baganiPage, baganiTotalPages) + '</div>';
       }
     }
 
@@ -311,30 +525,37 @@
       var extStart = (_newsPaginationState.externalPage - 1) * EXTERNAL_NEWS_PAGE_SIZE;
       var externalPagedItems = external.slice(extStart, extStart + EXTERNAL_NEWS_PAGE_SIZE);
 
-      var industryHtml = externalPagedItems.map(function (a) {
+      var industryHtml = externalPagedItems.map(function (a, ei) {
         var date = formatDate(a.date);
-        var hasImage = !!a.image;
-        var cardClass = hasImage ? 'news-feed-item has-image' : 'news-feed-item no-image';
-        var thumbHtml = hasImage
-          ? '<div class="news-feed-thumb">' +
-              '<a href="' + a.url + '" target="_blank" rel="noopener noreferrer">' +
-                '<img src="' + a.image + '" alt="' + (a.title || '') + '" loading="lazy">' +
-              '</a>' +
-            '</div>'
-          : '<div class="news-feed-noimage" aria-hidden="true">' +
-              '<i class="fa-regular fa-newspaper"></i>' +
-            '</div>';
-        return '<div class="col-lg-6 col-12">' +
-          '<article class="' + cardClass + '">' +
-            thumbHtml +
-            '<div class="news-feed-body">' +
+        var image = escHtml(a.image || '/images/post-1.jpg');
+        var title = escHtml(a.title || 'Untitled');
+        var excerpt = escHtml(decodeHtmlEntities(a.excerpt || ''));
+        var source = escHtml(a.source || 'News');
+        var rawDate = escHtml(a.date || '');
+        var videoEmbed = a.videoEmbed ? escHtml(a.videoEmbed) : '';
+        var eDelay = (ei * 0.08).toFixed(2);
+
+        return '<div class="col-xl-4 col-md-6 col-12 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="' + eDelay + 's">' +
+          '<article class="news-feed-item news-feed-item--stack has-image" role="button" tabindex="0"' +
+            ' data-ext-title="' + title + '"' +
+            ' data-ext-source="' + source + '"' +
+            ' data-ext-date="' + rawDate + '"' +
+            ' data-ext-image="' + image + '"' +
+            ' data-ext-excerpt="' + excerpt + '"' +
+            (videoEmbed ? ' data-ext-video="' + videoEmbed + '"' : '') +
+          '>' +
+            '<div class="news-feed-thumb news-feed-thumb--stack">' +
+              '<img src="' + image + '" alt="' + title + '" loading="lazy" onerror="this.onerror=null;this.src=\'/images/post-1.jpg\';">' +
+              (videoEmbed ? '<span class="news-feed-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span>' : '') +
+            '</div>' +
+            '<div class="news-feed-body news-feed-body--stack">' +
               '<div class="news-feed-meta">' +
                 '<span class="news-feed-source">' + (a.source || 'News') + '</span>' +
                 (date ? '<span class="news-feed-date"><i class="fa-regular fa-calendar"></i> ' + date + '</span>' : '') +
               '</div>' +
-              '<h4 class="news-feed-title"><a href="' + a.url + '" target="_blank" rel="noopener noreferrer">' + (a.title || 'Untitled') + '</a></h4>' +
-              (a.excerpt ? '<p class="news-feed-excerpt">' + a.excerpt + '</p>' : '') +
-              '<a href="' + a.url + '" target="_blank" rel="noopener noreferrer" class="news-feed-link">Read Full Article <i class="fa-solid fa-arrow-up-right-from-square"></i></a>' +
+              '<h4 class="news-feed-title">' + title + '</h4>' +
+              (excerpt ? '<p class="news-feed-excerpt">' + excerpt + '</p>' : '') +
+              '<span class="news-feed-link">Open Article <i class="fa-solid fa-arrow-up-right-from-square"></i></span>' +
             '</div>' +
           '</article>' +
         '</div>';
@@ -342,13 +563,13 @@
 
       html += '<div class="col-12 mag-industry-section">' +
         '<div class="news-section-intro">' +
-          '<div class="news-section-eyebrow">From Philippine Sources</div>' +
-          '<h2 class="news-section-heading">Oil Industry <span>News</span></h2>' +
-          '<p class="news-section-desc">Latest oil &amp; energy updates from GMA News, Philstar, and more.</p>' +
-          '<button type="button" class="news-refresh-btn" id="refreshExternalNewsBtn"><i class="fa-solid fa-rotate-right"></i> <span class="refresh-news-label">Refresh News</span></button>' +
-          '<div class="news-section-rule"></div>' +
+          '<div class="news-section-eyebrow wow fadeInDown" data-wow-duration="0.6s">From Philippine Sources</div>' +
+          '<h2 class="news-section-heading wow fadeInDown" data-wow-duration="0.7s" data-wow-delay="0.1s">Oil Industry <span>News</span></h2>' +
+          '<p class="news-section-desc wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">Latest oil &amp; energy updates from GMA News, Philstar, and more.</p>' +
+          '<button type="button" class="news-refresh-btn wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.3s" id="refreshExternalNewsBtn"><i class="fa-solid fa-rotate-right"></i> <span class="refresh-news-label">Refresh News</span></button>' +
+          '<div class="news-section-rule wow fadeInUp" data-wow-duration="0.8s" data-wow-delay="0.35s"></div>' +
         '</div>' +
-        '<div class="row g-3">' + industryHtml + '</div>' +
+        '<div class="row g-4">' + industryHtml + '</div>' +
         renderPager('external', _newsPaginationState.externalPage, externalTotalPages) +
       '</div>';
     }
@@ -370,7 +591,7 @@
     grid.innerHTML = '<div class="col-12 text-center py-5"><p style="color:#aaa">Loading articles...</p></div>';
 
     Promise.all([
-      sanityFetch('*[_type == "article"] | order(date desc) { "slug": slug.current, title, date, "image": image.asset->url, excerpt, tags }'),
+      sanityFetch('*[_type == "article"] | order(date desc) { "slug": slug.current, title, date, category, "image": image.asset->url, excerpt, tags }'),
       fetchExternalNewsLive({ forceRefresh: !!forceExternalRefresh })
     ])
       .then(function (results) {
@@ -399,7 +620,7 @@
 
     container.innerHTML = '<div style="text-align:center;padding:80px 0"><p style="color:#aaa">Loading article...</p></div>';
 
-    sanityFetch('*[_type == "article" && slug.current == "' + slug.replace(/"/g, '') + '"][0] { title, date, "image": image.asset->url, excerpt, tags, body }')
+    sanityFetch('*[_type == "article" && slug.current == "' + slug.replace(/"/g, '') + '"][0] { title, date, category, "image": image.asset->url, excerpt, tags, body }')
       .then(function (article) {
         if (!article) {
           container.innerHTML = '<p style="text-align:center;padding:60px 0;color:#888">Article not found.</p>';
@@ -428,6 +649,19 @@
           }).join('');
         }
 
+        var type = normalizeBaganiCategory(article);
+        var headerType = type === 'Article' ? 'News' : type;
+        var pageHeaderTitle = document.querySelector('.page-header-box h1');
+        var breadcrumbActive = document.querySelector('.page-header-box .breadcrumb-item.active');
+        if (pageHeaderTitle) {
+          pageHeaderTitle.innerHTML = escHtml(headerType) + ' <span>Article</span>';
+        }
+        if (breadcrumbActive) {
+          breadcrumbActive.textContent = (headerType + ' Article').toLowerCase();
+        }
+
+        var dateText = formatDate(article.date);
+
         var tagsHtml = '';
         if (article.tags && article.tags.length) {
           tagsHtml = '<div class="post-tag-links"><div class="post-tags wow fadeInUp"><span class="tag-links">Tags: ' +
@@ -436,13 +670,21 @@
         }
 
         container.innerHTML =
-          (article.image ? '<div class="post-image"><figure><img src="' + article.image + '" alt="' + (article.title || '') + '" style="width:100%;border-radius:12px"></figure></div>' : '') +
-          '<div class="post-content"><div class="post-entry">' +
-            '<h1 class="wow fadeInUp">' + (article.title || '') + '</h1>' +
-            (article.date ? '<p class="post-date wow fadeInUp">' + article.date + '</p>' : '') +
-            (article.excerpt ? '<p class="wow fadeInUp"><strong>' + article.excerpt + '</strong></p>' : '') +
-            bodyHtml +
-          '</div>' + tagsHtml + '</div>';
+          '<article class="bagani-article-shell">' +
+            (article.image ? '<div class="post-image bagani-article-hero"><figure><img src="' + article.image + '" alt="' + escHtml(article.title || '') + '" style="width:100%"></figure></div>' : '') +
+            '<div class="post-content bagani-article-content">' +
+              '<div class="bagani-article-meta wow fadeInUp">' +
+                '<span class="mag-tag ' + baganiCategoryClass(type) + '">' + type + '</span>' +
+                (dateText ? '<span class="bagani-article-date"><i class="fa-regular fa-calendar"></i> ' + dateText + '</span>' : '') +
+              '</div>' +
+              '<div class="post-entry bagani-article-entry">' +
+                '<h1 class="wow fadeInUp">' + escHtml(article.title || '') + '</h1>' +
+                (article.excerpt ? '<p class="bagani-article-lead wow fadeInUp">' + escHtml(article.excerpt) + '</p>' : '') +
+                bodyHtml +
+              '</div>' +
+              tagsHtml +
+            '</div>' +
+          '</article>';
 
         reInitWow();
       })
