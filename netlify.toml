@@ -40,6 +40,13 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# Pass through Netlify internal APIs (Identity, Git Gateway, Functions)
+[[redirects]]
+  from = "/.netlify/*"
+  to = "/.netlify/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/404.html"

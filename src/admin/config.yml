@@ -4,6 +4,8 @@ backend:
 
 media_folder: "src/images"
 public_folder: "/images"
+site_url: "/"
+logo_url: "/images/logo.svg"
 
 collections:
   # ─── Products ───
