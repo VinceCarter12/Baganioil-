@@ -456,15 +456,28 @@
     var grid = document.querySelector('.project-item-boxes');
     if (!grid) return;
 
-    sanityFetch('*[_type == "product"] | order(line asc, name asc) { "slug": slug.current, name, line, category, spec, shortDesc, "image": image.asset->url }')
+    sanityFetch('*[_type == "product"] | order(line asc, name asc) { "slug": slug.current, name, line, category, spec, shortDesc, "image": image.asset->url, "viscosity": specs[key match "Viscosity*"][0].value, "engineType": specs[key match "Engine*"][0].value }')
       .then(function (products) {
         if (!products || !products.length) return;
 
         var countEl = document.getElementById('product-count');
         if (countEl) countEl.textContent = products.length;
 
+        function getFilterClasses(p) {
+          var cls = (p.category || '').toLowerCase();
+          var v = ((p.viscosity || p.spec || '')).toLowerCase();
+          if (v.indexOf('10w-40') > -1) cls += ' v10w40';
+          else if (v.indexOf('20w-40') > -1) cls += ' v20w40';
+          else if (v.indexOf('0w-20') > -1) cls += ' v0w20';
+          var e = (p.engineType || '').toLowerCase();
+          if (e.indexOf('diesel') > -1) cls += ' diesel';
+          if (e.indexOf('motorcycle') > -1 || e.indexOf('scooter') > -1) cls += ' motorcycle-scooter';
+          if (e.indexOf('gasoline') > -1) cls += ' gasoline';
+          return cls;
+        }
+
         grid.innerHTML = products.map(function (p) {
-          return '<div class="col-lg-4 col-md-6 project-item-box ' + (p.category || '') + '">' +
+          return '<div class="col-lg-4 col-md-6 project-item-box ' + getFilterClasses(p) + '">' +
             '<div class="bagani-product-item">' +
               '<a href="/products/' + p.slug + '/" class="bagani-product-img-wrap">' +
                 '<img src="' + (p.image || '') + '" alt="Bagani ' + p.name + '">' +
