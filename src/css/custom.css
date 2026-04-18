@@ -8050,6 +8050,17 @@ body[data-page="home"] .hero.hero-video {
         display: block; position: absolute; top: 20px; right: 20px;
         background: transparent; border: none; color: #111111; font-size: 24px; cursor: pointer;
     }
+
+    /* 2-column product grid on mobile */
+    .project-item-box { padding-left: 8px; padding-right: 8px; margin-bottom: 16px; }
+    .row.project-item-boxes { margin-left: -8px; margin-right: -8px; }
+    .bagani-product-item { margin-bottom: 0; }
+    .bagani-product-info { padding: 10px 2px 0; }
+    .bagani-product-name { font-size: 13px; }
+    .bagani-product-spec { font-size: 12px; margin-bottom: 2px; }
+    .bagani-product-desc { display: none; }
+    .bagani-product-line { font-size: 11px; margin-bottom: 2px; }
+    .bagani-product-link { font-size: 12px; }
 }
 
 /* =====================================================================

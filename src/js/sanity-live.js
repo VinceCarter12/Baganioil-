@@ -477,7 +477,7 @@
         }
 
         grid.innerHTML = products.map(function (p) {
-          return '<div class="col-lg-4 col-md-6 project-item-box ' + getFilterClasses(p) + '">' +
+          return '<div class="col-lg-4 col-md-6 col-6 project-item-box ' + getFilterClasses(p) + '">' +
             '<div class="bagani-product-item">' +
               '<a href="/products/' + p.slug + '/" class="bagani-product-img-wrap">' +
                 '<img src="' + (p.image || '') + '" alt="Bagani ' + p.name + '">' +
