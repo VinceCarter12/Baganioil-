@@ -519,24 +519,22 @@
           body: JSON.stringify({ message: text })
         })
         .then(function(r) {
-          if (!r.ok) {
-            console.error('Chat function error:', r.status, r.statusText);
-            throw new Error('HTTP ' + r.status);
-          }
-          return r.json();
+          return r.json().then(function(data) {
+            return { ok: r.ok, data: data };
+          });
         })
-        .then(function(data) {
+        .then(function(res) {
           removeTyping();
-          if (data.error) {
+          if (!res.ok || res.data.error) {
             addBotMessage("Sorry, I'm having trouble right now. Please try again or visit us on Facebook.", true);
           } else {
-            addBotMessage(data.reply || "Let me connect you with our team.", data.suggestMessenger);
+            addBotMessage(res.data.reply || "Let me connect you with our team.", res.data.suggestMessenger);
           }
         })
         .catch(function(err) {
           console.error('Chat error:', err.message);
           removeTyping();
-          addBotMessage("Connection error. Please try again or reach us on Facebook.", true);
+          addBotMessage("Sorry, I'm having trouble right now. Please try again or visit us on Facebook.", true);
         })
         .finally(function() {
           isBusy = false;

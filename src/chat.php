@@ -76,16 +76,25 @@ curl_setopt_array($ch, [
         'Content-Type: application/json',
         'Authorization: Bearer ' . $GROQ_API_KEY
     ],
-    CURLOPT_TIMEOUT => 20
+    CURLOPT_TIMEOUT => 25,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_SSL_VERIFYHOST => 0,
 ]);
 
 $result = curl_exec($ch);
+$curlError = curl_error($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-if (!$result || $httpCode !== 200) {
+if ($result === false) {
     http_response_code(502);
-    echo json_encode(['error' => 'AI service unavailable']);
+    echo json_encode(['error' => 'AI service unavailable', 'detail' => $curlError]);
+    exit;
+}
+
+if ($httpCode !== 200) {
+    http_response_code(502);
+    echo json_encode(['error' => 'AI service unavailable', 'status' => $httpCode]);
     exit;
 }
 
