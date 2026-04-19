@@ -106,6 +106,7 @@ module.exports = function (eleventyConfig) {
 	eleventyConfig.addPassthroughCopy("src/videos");
 	eleventyConfig.addPassthroughCopy("src/webfonts");
 	eleventyConfig.addPassthroughCopy("src/admin");
+	eleventyConfig.addPassthroughCopy("src/.htaccess");
 
 	// Products: Sanity first, fallback to local JSON files
 	eleventyConfig.addGlobalData("productsList", async () => {

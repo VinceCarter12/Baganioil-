@@ -1,0 +1,19 @@
+DirectoryIndex index.html
+
+# Serve clean URLs - if a directory exists, serve its index.html
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # If the request is for a real file or directory, serve it directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # If URL has no extension and no trailing slash, add trailing slash
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_URI} !/$
+    RewriteRule ^(.+[^/])$ /$1/ [R=301,L]
+</IfModule>
