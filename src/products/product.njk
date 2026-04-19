@@ -1,14 +1,5 @@
 ---
-pagination:
-  data: productsList
-  size: 1
-  alias: product
-permalink: "/products/{{ product.slug }}/"
-layout: base.njk
-activePage: products
-eleventyComputed:
-  title: "{{ product.name }}"
-  pageHeaderTitle: "{{ product.name | safe }}"
+permalink: false
 ---
 
 <!-- Page Header Start -->
