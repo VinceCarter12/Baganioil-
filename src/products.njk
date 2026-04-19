@@ -172,14 +172,7 @@ window.addEventListener('load', function() {
     });
 
     // Sidebar Checkbox Filtering
-    $('.filter-check').on('change', function() {
-        // Single-select groups: uncheck all siblings when one is checked
-        var $group = $(this).closest('.filter-group');
-        if ($group.hasClass('single-select') && $(this).is(':checked')) {
-            $group.find('.filter-check').not(this).prop('checked', false);
-        }
-
-        // Rebuild filter from all currently checked inputs
+    function applyCurrentFilters() {
         var filters = [];
         $('.filter-check:checked').each(function() {
             filters.push($(this).val());
@@ -187,12 +180,42 @@ window.addEventListener('load', function() {
         var filterValue = filters.length ? filters.join(', ') : '*';
         $grid.isotope({ filter: filterValue });
 
-        // Update product count
         setTimeout(function() {
             var visibleItems = $grid.data('isotope').filteredItems.length;
             $('#product-count').text(visibleItems);
         }, 100);
+    }
+
+    $('.filter-check').on('change', function() {
+        // Single-select groups: uncheck all siblings when one is checked
+        var $group = $(this).closest('.filter-group');
+        if ($group.hasClass('single-select') && $(this).is(':checked')) {
+            $group.find('.filter-check').not(this).prop('checked', false);
+        }
+
+        applyCurrentFilters();
     });
+
+    // Apply incoming URL filter, e.g. /products/?filter=amihan
+    var initialFilter = new URLSearchParams(window.location.search).get('filter');
+    var filterToSelector = {
+        amihan: '.amihan',
+        laon: '.laon',
+        aman: '.aman',
+        anitun: '.anitun'
+    };
+    if (initialFilter && filterToSelector[initialFilter]) {
+        var selector = filterToSelector[initialFilter];
+        $('.filter-group.single-select').each(function() {
+            var $group = $(this);
+            var $target = $group.find('.filter-check[value="' + selector + '"]');
+            if ($target.length) {
+                $group.find('.filter-check').prop('checked', false);
+                $target.prop('checked', true);
+            }
+        });
+        applyCurrentFilters();
+    }
 
     // Sort Dropdown
     $('#sort-by').on('change', function() {

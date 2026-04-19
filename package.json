@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Bagani Oil - Premium oils and lubricants",
   "scripts": {
-    "start": "npx @11ty/eleventy --serve",
+    "start": "npx netlify dev",
+    "start:11ty": "npx @11ty/eleventy --serve",
+    "start:netlify": "npx netlify dev",
     "build": "npx @11ty/eleventy"
   },
   "repository": {

@@ -3,7 +3,7 @@ import {DocumentsIcon} from '@sanity/icons'
 
 export default defineType({
   name: 'article',
-  title: 'News & Articles',
+  title: 'Bagani Updates',
   type: 'document',
   icon: DocumentsIcon,
   fields: [
@@ -19,6 +19,23 @@ export default defineType({
       type: 'slug',
       options: {source: 'title'},
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'category',
+      title: 'Update Type',
+      type: 'string',
+      initialValue: 'News',
+      validation: (Rule) => Rule.required(),
+      options: {
+        list: [
+          {title: 'Announcement', value: 'Announcement'},
+          {title: 'Event', value: 'Event'},
+          {title: 'Article', value: 'Article'},
+          {title: 'News', value: 'News'},
+        ],
+        layout: 'radio',
+      },
+      description: 'Used in Bagani Updates page filters and badges.',
     }),
     defineField({
       name: 'date',
@@ -60,7 +77,7 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      subtitle: 'date',
+      subtitle: 'category',
       media: 'image',
     },
   },
