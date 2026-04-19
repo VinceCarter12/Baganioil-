@@ -8,39 +8,81 @@
   "image": "/images/products/amihan-gale.png",
   "description": "A semi-synthetic, multi-grade engine oil developed for 4-stroke motorcycles, formulated according to Japanese and U.S. performance standards. Produced using high-quality base oils combined with advanced additive technology to deliver reliable engine protection and performance.",
   "benefits": [
-    { "title": "Performance Enhancement", "desc": "Designed to support stronger engine performance and smoother acceleration for an improved riding experience." },
-    { "title": "Reliable Engine Protection", "desc": "Helps guard against rust, abrasion, and mechanical wear, extending engine life and maintaining optimal efficiency." },
-    { "title": "Engine Cleanliness", "desc": "Advanced detergent additives help prevent deposit formation and keep internal engine components clean." },
-    { "title": "Smooth Cold Start & Extended Oil Life", "desc": "Provides dependable cold-start lubrication while supporting longer oil service intervals." }
+    {
+      "title": "Performance Enhancement",
+      "desc": "Designed to support stronger engine performance and smoother acceleration for an improved riding experience."
+    },
+    {
+      "title": "Reliable Engine Protection",
+      "desc": "Helps guard against rust, abrasion, and mechanical wear, extending engine life and maintaining optimal efficiency."
+    },
+    {
+      "title": "Engine Cleanliness",
+      "desc": "Advanced detergent additives help prevent deposit formation and keep internal engine components clean."
+    },
+    {
+      "title": "Smooth Cold Start & Extended Oil Life",
+      "desc": "Provides dependable cold-start lubrication while supporting longer oil service intervals."
+    }
   ],
   "applicationText": "BAGANI AMIHAN 4T GALE is specifically designed for modern four-stroke scooter engines and compatible motorcycles requiring a semi-synthetic lubricant.",
   "approvalsText": "This product meets the requirements of API Service Classification SL and complies with JASO T903 MB specifications, making it suitable for various Japanese and European motorcycle models.",
-  "availableSizes": ["200L DRUM", "20L PAIL", "12X800ML BOX"],
+  "availableSizes": [
+    "200L DRUM",
+    "20L PAIL",
+    "12X800ML BOX"
+  ],
   "typicalProperties": {
     "grades": [],
     "rows": [
-      { "property": "Specific Gravity @ 15.6 °C", "values": ["0.8674"] },
-      { "property": "Flash Point, °C", "values": ["234"] },
-      { "property": "Pour Point, °C", "values": ["-36"] },
-      { "property": "Viscosity @ 40 °C, cSt", "values": ["101"] },
-      { "property": "Viscosity @ 100 °C, cSt", "values": ["14.5"] },
-      { "property": "Viscosity Index", "values": ["155"] },
-      { "property": "Color, ASTM", "values": ["3.5"] },
-      { "property": "TBN, mgKOH/g", "values": ["9.6"] }
+      {
+        "property": "Specific Gravity @ 15.6 \u00c2\u00b0C",
+        "values": [
+          "0.8674"
+        ]
+      },
+      {
+        "property": "Flash Point, \u00c2\u00b0C",
+        "values": [
+          "234"
+        ]
+      },
+      {
+        "property": "Pour Point, \u00c2\u00b0C",
+        "values": [
+          "-36"
+        ]
+      },
+      {
+        "property": "Viscosity @ 40 \u00c2\u00b0C, cSt",
+        "values": [
+          "101"
+        ]
+      },
+      {
+        "property": "Viscosity @ 100 \u00c2\u00b0C, cSt",
+        "values": [
+          "14.5"
+        ]
+      },
+      {
+        "property": "Viscosity Index",
+        "values": [
+          "155"
+        ]
+      },
+      {
+        "property": "Color, ASTM",
+        "values": [
+          "3.5"
+        ]
+      },
+      {
+        "property": "TBN, mgKOH/g",
+        "values": [
+          "9.6"
+        ]
+      }
     ]
-  },
-  "faqs": [
-    {
-      "q": "Is Bagani Amihan 4T Gale good for my scooter?",
-      "a": "Yes! The Amihan 4T Gale is JASO MB certified and specifically designed for scooters and CVT-equipped motorcycles."
-    },
-    {
-      "q": "What does JASO MB mean?",
-      "a": "JASO MB is a Japanese standard optimized for scooters and motorcycles with CVT transmissions, where reduced friction between the clutch plates is needed."
-    },
-    {
-      "q": "What makes this oil semi-synthetic?",
-      "a": "It is blended from high-quality synthetic and mineral base oils, offering better protection and performance than conventional mineral oils at a more accessible price than full synthetics."
-    }
-  ]
+  }
 }

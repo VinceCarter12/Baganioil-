@@ -8,41 +8,102 @@
   "image": "/images/products/amihan-tempest.png",
   "description": "A high-quality multi-grade engine oil developed for four-stroke motorcycle engines, including both air-cooled and water-cooled systems. Advanced wear protection formulation helps maintain consistent engine protection, particularly in motorcycles operating under high power and demanding conditions.",
   "benefits": [
-    { "title": "Excellent Wear Protection", "desc": "Helps reduce friction and protects critical engine components from premature wear." },
-    { "title": "Engine Cleanliness", "desc": "Formulated with effective detergent and dispersant additives to help keep internal engine parts clean and free from harmful deposits." },
-    { "title": "Deposit and Sludge Control", "desc": "Helps minimize sludge formation, manage soot accumulation, and reduce the risk of piston ring sticking." },
-    { "title": "Stable Viscosity Performance", "desc": "A high viscosity index combined with strong TBN reserves helps ensure reliable lubrication during cold starts and maintains protection at elevated operating temperatures." },
-    { "title": "Reduced Oil Consumption", "desc": "Supports controlled oil usage while helping extend oil service intervals." },
-    { "title": "Component Protection", "desc": "Maintains oil stability to protect critical parts such as the engine, clutch, and gear system." }
+    {
+      "title": "Excellent Wear Protection",
+      "desc": "Helps reduce friction and protects critical engine components from premature wear."
+    },
+    {
+      "title": "Engine Cleanliness",
+      "desc": "Formulated with effective detergent and dispersant additives to help keep internal engine parts clean and free from harmful deposits."
+    },
+    {
+      "title": "Deposit and Sludge Control",
+      "desc": "Helps minimize sludge formation, manage soot accumulation, and reduce the risk of piston ring sticking."
+    },
+    {
+      "title": "Stable Viscosity Performance",
+      "desc": "A high viscosity index combined with strong TBN reserves helps ensure reliable lubrication during cold starts and maintains protection at elevated operating temperatures."
+    },
+    {
+      "title": "Reduced Oil Consumption",
+      "desc": "Supports controlled oil usage while helping extend oil service intervals."
+    },
+    {
+      "title": "Component Protection",
+      "desc": "Maintains oil stability to protect critical parts such as the engine, clutch, and gear system."
+    }
   ],
   "applicationText": "BAGANI 4T TEMPEST is recommended for modern four-stroke motorcycle engines, suitable for both on-road motorcycles and off-road dirt bikes. It is also appropriate for use in selected farm machinery and portable generator sets requiring similar lubricant specifications.",
   "approvalsText": "This product meets the requirements of API Service Classification SL and complies with JASO T903 MA-2 specifications, making it suitable for many modern Japanese and European motorcycle models.",
-  "availableSizes": ["200L DRUM", "20L PAIL", "12X1L BOX", "12X800ML BOX", "60X200ML BOX"],
+  "availableSizes": [
+    "200L DRUM",
+    "20L PAIL",
+    "12X1L BOX",
+    "12X800ML BOX",
+    "60X200ML BOX"
+  ],
   "typicalProperties": {
-    "grades": ["BAGANI 4T TEMPEST 20W-50", "BAGANI 4T TEMPEST 20W-40"],
+    "grades": [
+      "BAGANI 4T TEMPEST 20W-50",
+      "BAGANI 4T TEMPEST 20W-40"
+    ],
     "rows": [
-      { "property": "Specific Gravity @ 15.6 °C", "values": ["0.884", "0.871"] },
-      { "property": "Flash Point, °C", "values": ["234", "234"] },
-      { "property": "Pour Point, °C", "values": ["-18.5", "-18.5"] },
-      { "property": "Viscosity @ 40 °C, cSt", "values": ["173", "120"] },
-      { "property": "Viscosity @ 100 °C, cSt", "values": ["18.6", "15.0"] },
-      { "property": "Viscosity Index", "values": ["122", "128"] },
-      { "property": "Color, ASTM", "values": ["3.5", "3.5"] },
-      { "property": "TBN, mgKOH/g", "values": ["10.0", "10.0"] }
+      {
+        "property": "Specific Gravity @ 15.6 \u00c2\u00b0C",
+        "values": [
+          "0.884",
+          "0.871"
+        ]
+      },
+      {
+        "property": "Flash Point, \u00c2\u00b0C",
+        "values": [
+          "234",
+          "234"
+        ]
+      },
+      {
+        "property": "Pour Point, \u00c2\u00b0C",
+        "values": [
+          "-18.5",
+          "-18.5"
+        ]
+      },
+      {
+        "property": "Viscosity @ 40 \u00c2\u00b0C, cSt",
+        "values": [
+          "173",
+          "120"
+        ]
+      },
+      {
+        "property": "Viscosity @ 100 \u00c2\u00b0C, cSt",
+        "values": [
+          "18.6",
+          "15.0"
+        ]
+      },
+      {
+        "property": "Viscosity Index",
+        "values": [
+          "122",
+          "128"
+        ]
+      },
+      {
+        "property": "Color, ASTM",
+        "values": [
+          "3.5",
+          "3.5"
+        ]
+      },
+      {
+        "property": "TBN, mgKOH/g",
+        "values": [
+          "10.0",
+          "10.0"
+        ]
+      }
     ]
-  },
-  "faqs": [
-    {
-      "q": "What is the difference between 20W-50 and 20W-40?",
-      "a": "The 20W-50 is thicker at operating temperature, better for high-heat or high-load conditions. The 20W-40 offers slightly better flow in moderate climates. Both provide excellent protection for high-power motorcycles."
-    },
-    {
-      "q": "What does JASO MA-2 mean?",
-      "a": "JASO MA-2 is the highest JASO friction standard for wet clutch motorcycles. It ensures the oil provides the right friction characteristics to prevent clutch slippage in high-performance bikes."
-    },
-    {
-      "q": "Is this suitable for my dirt bike?",
-      "a": "Yes, the Amihan 4T Tempest is suitable for both on-road motorcycles and off-road dirt bikes requiring API SL / JASO MA-2 performance."
-    }
-  ]
+  }
 }

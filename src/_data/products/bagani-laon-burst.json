@@ -8,36 +8,69 @@
   "image": "/images/products/laon-burst.png",
   "description": "A high-quality commercial multi-grade engine oil suitable for both light and heavy-duty diesel and gasoline engines. Specifically formulated for the lubrication of commercial vehicle engines, including those operating on high-sulfur diesel fuels. Meets the performance requirements of modern low-emission diesel engines as well as high-performance gasoline engines.",
   "benefits": [
-    { "title": "", "desc": "Engineered to provide excellent thermal and oxidation stability, high levels of detergency and dispersancy, effective corrosion protection, and superior load-carrying capacity." },
-    { "title": "", "desc": "These properties help keep engines clean under both high and low temperature conditions." },
-    { "title": "", "desc": "The advanced additive package also reduces wear on cylinder bores and piston rings, extending engine life." }
+    {
+      "title": "",
+      "desc": "Engineered to provide excellent thermal and oxidation stability, high levels of detergency and dispersancy, effective corrosion protection, and superior load-carrying capacity."
+    },
+    {
+      "title": "",
+      "desc": "These properties help keep engines clean under both high and low temperature conditions."
+    },
+    {
+      "title": "",
+      "desc": "The advanced additive package also reduces wear on cylinder bores and piston rings, extending engine life."
+    }
   ],
   "applicationText": "This multi-grade oil is designed for high-speed turbocharged or naturally aspirated diesel and gasoline engines operating under severe service conditions, such as those encountered in commercial transport and heavy construction equipment. Its versatility makes it suitable for mixed-fleet applications commonly used in these industries.",
   "approvalsText": "BAGANI LAON BURST 15W-40 meets the following industry standards: API CI-4 / CH-4 / CG-4 / SJ / SL; ACEA E3-96 Issue 3, E5-99, B3-98, A3-98; Mercedes-Benz 228.1 & 228.3; MAN 3275; MACK EO-M Plus; Volvo VDS-2; RVI RLD 99; Cummins 20072, 20076, 20077.",
-  "availableSizes": ["200L DRUM", "20L PAIL", "18L PAIL", "12X1L BOX", "4X4L BOX"],
+  "availableSizes": [
+    "200L DRUM",
+    "20L PAIL",
+    "18L PAIL",
+    "12X1L BOX",
+    "4X4L BOX"
+  ],
   "typicalProperties": {
-    "grades": ["BAGANI LAON BURST 15W-40"],
+    "grades": [
+      "BAGANI LAON BURST 15W-40"
+    ],
     "rows": [
-      { "property": "Specific Gravity @ 15.6 °C", "values": ["0.880"] },
-      { "property": "Flash Point, °C", "values": ["238"] },
-      { "property": "Viscosity @ 40 °C, cSt", "values": ["112"] },
-      { "property": "Viscosity @ 100 °C, cSt", "values": ["14.35"] },
-      { "property": "Viscosity Index", "values": ["136"] },
-      { "property": "TBN, mgKOH/g", "values": ["11"] }
+      {
+        "property": "Specific Gravity @ 15.6 \u00c2\u00b0C",
+        "values": [
+          "0.880"
+        ]
+      },
+      {
+        "property": "Flash Point, \u00c2\u00b0C",
+        "values": [
+          "238"
+        ]
+      },
+      {
+        "property": "Viscosity @ 40 \u00c2\u00b0C, cSt",
+        "values": [
+          "112"
+        ]
+      },
+      {
+        "property": "Viscosity @ 100 \u00c2\u00b0C, cSt",
+        "values": [
+          "14.35"
+        ]
+      },
+      {
+        "property": "Viscosity Index",
+        "values": [
+          "136"
+        ]
+      },
+      {
+        "property": "TBN, mgKOH/g",
+        "values": [
+          "11"
+        ]
+      }
     ]
-  },
-  "faqs": [
-    {
-      "q": "Can Laon Burst 15W-40 be used in both diesel and gasoline engines?",
-      "a": "Yes. The API CI-4/SL rating makes it suitable for both heavy-duty diesel and gasoline engines, ideal for mixed-fleet operations."
-    },
-    {
-      "q": "Is this oil suitable for turbocharged trucks?",
-      "a": "Yes, Bagani Laon Burst 15W-40 is specifically formulated for high-speed turbocharged and naturally aspirated diesel engines in commercial vehicles."
-    },
-    {
-      "q": "What is TBN and why does it matter?",
-      "a": "TBN (Total Base Number) measures the oil's ability to neutralize acids. A TBN of 11 mgKOH/g means Laon Burst provides strong acid neutralization, protecting your engine from corrosion caused by combustion byproducts."
-    }
-  ]
+  }
 }

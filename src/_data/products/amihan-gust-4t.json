@@ -8,40 +8,88 @@
   "image": "/images/products/amihan-gust.png",
   "description": "A high-quality multi-grade engine oil developed for four-stroke motorcycle engines, including both air-cooled and water-cooled systems. Advanced wear protection formulation helps maintain consistent engine protection, particularly in motorcycles operating under high power and demanding conditions.",
   "benefits": [
-    { "title": "Enhanced Wear Protection", "desc": "Helps safeguard engine components against friction and premature wear." },
-    { "title": "Lower Oil Consumption", "desc": "Supports reduced oil usage while helping maintain cleaner engine internals." },
-    { "title": "Cost-Effective Maintenance", "desc": "Helps minimize engine deposits, contributing to reduced maintenance requirements." },
-    { "title": "Improved Fuel Efficiency", "desc": "Promotes efficient engine performance and optimized fuel consumption." }
+    {
+      "title": "Enhanced Wear Protection",
+      "desc": "Helps safeguard engine components against friction and premature wear."
+    },
+    {
+      "title": "Lower Oil Consumption",
+      "desc": "Supports reduced oil usage while helping maintain cleaner engine internals."
+    },
+    {
+      "title": "Cost-Effective Maintenance",
+      "desc": "Helps minimize engine deposits, contributing to reduced maintenance requirements."
+    },
+    {
+      "title": "Improved Fuel Efficiency",
+      "desc": "Promotes efficient engine performance and optimized fuel consumption."
+    }
   ],
   "applicationText": "BAGANI AMIHAN 4T GUST is suitable for modern Japanese and European motorcycles. It can also be used in small four-stroke gasoline-powered equipment such as generator sets, pumps, and garden machinery.",
   "approvalsText": "This product meets the requirements of API Service Classification SG/CD.",
-  "availableSizes": ["200L DRUM", "20L PAIL", "12X1L BOX", "60X200ML BOX"],
+  "availableSizes": [
+    "200L DRUM",
+    "20L PAIL",
+    "12X1L BOX",
+    "60X200ML BOX"
+  ],
   "typicalProperties": {
     "grades": [],
     "rows": [
-      { "property": "SAE Grade", "values": ["40"] },
-      { "property": "Specific Gravity @ 15.6 °C", "values": ["0.8707"] },
-      { "property": "Flash Point, °C", "values": ["237"] },
-      { "property": "Pour Point, °C", "values": ["-11.5"] },
-      { "property": "Viscosity @ 40 °C, cSt", "values": ["147.39"] },
-      { "property": "Viscosity @ 100 °C, cSt", "values": ["15.8"] },
-      { "property": "Viscosity Index", "values": ["112"] },
-      { "property": "Color, ASTM", "values": ["3.0"] },
-      { "property": "TBN, mgKOH/g", "values": ["6.0"] }
+      {
+        "property": "SAE Grade",
+        "values": [
+          "40"
+        ]
+      },
+      {
+        "property": "Specific Gravity @ 15.6 \u00c2\u00b0C",
+        "values": [
+          "0.8707"
+        ]
+      },
+      {
+        "property": "Flash Point, \u00c2\u00b0C",
+        "values": [
+          "237"
+        ]
+      },
+      {
+        "property": "Pour Point, \u00c2\u00b0C",
+        "values": [
+          "-11.5"
+        ]
+      },
+      {
+        "property": "Viscosity @ 40 \u00c2\u00b0C, cSt",
+        "values": [
+          "147.39"
+        ]
+      },
+      {
+        "property": "Viscosity @ 100 \u00c2\u00b0C, cSt",
+        "values": [
+          "15.8"
+        ]
+      },
+      {
+        "property": "Viscosity Index",
+        "values": [
+          "112"
+        ]
+      },
+      {
+        "property": "Color, ASTM",
+        "values": [
+          "3.0"
+        ]
+      },
+      {
+        "property": "TBN, mgKOH/g",
+        "values": [
+          "6.0"
+        ]
+      }
     ]
-  },
-  "faqs": [
-    {
-      "q": "Is Amihan 4T Gust good for daily commuting?",
-      "a": "Yes, the Amihan 4T Gust is formulated for reliable daily performance. SAE 40 viscosity provides consistent protection across a wide range of riding conditions."
-    },
-    {
-      "q": "How often should I change the oil?",
-      "a": "We recommend every 2,000–3,000 km under normal conditions, or every 1,500 km for heavy-duty use."
-    },
-    {
-      "q": "Can I use this for my generator or water pump?",
-      "a": "Yes. The Amihan 4T Gust is suitable for small 4-stroke gasoline-powered equipment such as generator sets, pumps, and garden machinery."
-    }
-  ]
+  }
 }

@@ -8,39 +8,84 @@
   "image": "/images/products/hanan-raze.png",
   "description": "A premium multi-grade motor oil designed to deliver dependable performance in various driving conditions. Blended from highly refined paraffinic base oils known for their strong stability and high viscosity index, with a carefully balanced additive package featuring advanced detergents, dispersants, viscosity modifiers, and performance enhancers.",
   "benefits": [
-    { "title": "Enhanced Protection from Wear and Corrosion", "desc": "Helps safeguard engine components against rust formation and corrosive damage." },
-    { "title": "Reliable Sludge Control", "desc": "Designed to resist sludge accumulation and maintain cleaner engine internals." },
-    { "title": "High Resistance to Heat Breakdown", "desc": "Provides strong thermal stability to prevent oil degradation under high operating temperatures." },
-    { "title": "Advanced Deposit Control", "desc": "Powerful cleaning agents minimize deposit buildup and promote smoother engine operation." }
+    {
+      "title": "Enhanced Protection from Wear and Corrosion",
+      "desc": "Helps safeguard engine components against rust formation and corrosive damage."
+    },
+    {
+      "title": "Reliable Sludge Control",
+      "desc": "Designed to resist sludge accumulation and maintain cleaner engine internals."
+    },
+    {
+      "title": "High Resistance to Heat Breakdown",
+      "desc": "Provides strong thermal stability to prevent oil degradation under high operating temperatures."
+    },
+    {
+      "title": "Advanced Deposit Control",
+      "desc": "Powerful cleaning agents minimize deposit buildup and promote smoother engine operation."
+    }
   ],
   "applicationText": "BAGANI HANAN RAZE PRO 20W-50 is developed for year-round use in a wide range of vehicles. Made with high-quality mineral base oils and modern additive technology, it delivers excellent engine cleanliness and dependable protection against wear, corrosion, deposits, and sludge under different driving environments. It has demonstrated strong performance in turbocharged and multi-valve engines and is also suitable for CRDi diesel engines meeting API CF specifications.",
   "approvalsText": "This product surpasses the warranty requirements of most passenger cars and light-duty trucks where API SL/CF performance levels are specified. It is also compliant with European standards including CCMC G5 and ACEA A3/B3.",
-  "availableSizes": ["200L DRUM", "20L PAIL", "12X1L BOX", "4X4L BOX"],
+  "availableSizes": [
+    "200L DRUM",
+    "20L PAIL",
+    "12X1L BOX",
+    "4X4L BOX"
+  ],
   "typicalProperties": {
-    "grades": ["BAGANI HANAN RAZE 20W-50"],
+    "grades": [
+      "BAGANI HANAN RAZE 20W-50"
+    ],
     "rows": [
-      { "property": "Specific Gravity @ 15.6 °C", "values": ["0.882"] },
-      { "property": "Flash Point, °C", "values": ["230"] },
-      { "property": "Pour Point, °C", "values": ["-20"] },
-      { "property": "Viscosity @ 40 °C, cSt", "values": ["176"] },
-      { "property": "Viscosity @ 100 °C, cSt", "values": ["18.8"] },
-      { "property": "Viscosity Index", "values": ["125"] },
-      { "property": "Color, ASTM", "values": ["3.5"] },
-      { "property": "TBN, mgKOH/g", "values": ["10.0"] }
+      {
+        "property": "Specific Gravity @ 15.6 \u00c2\u00b0C",
+        "values": [
+          "0.882"
+        ]
+      },
+      {
+        "property": "Flash Point, \u00c2\u00b0C",
+        "values": [
+          "230"
+        ]
+      },
+      {
+        "property": "Pour Point, \u00c2\u00b0C",
+        "values": [
+          "-20"
+        ]
+      },
+      {
+        "property": "Viscosity @ 40 \u00c2\u00b0C, cSt",
+        "values": [
+          "176"
+        ]
+      },
+      {
+        "property": "Viscosity @ 100 \u00c2\u00b0C, cSt",
+        "values": [
+          "18.8"
+        ]
+      },
+      {
+        "property": "Viscosity Index",
+        "values": [
+          "125"
+        ]
+      },
+      {
+        "property": "Color, ASTM",
+        "values": [
+          "3.5"
+        ]
+      },
+      {
+        "property": "TBN, mgKOH/g",
+        "values": [
+          "10.0"
+        ]
+      }
     ]
-  },
-  "faqs": [
-    {
-      "q": "Can Hanan Raze be used in both gasoline and diesel engines?",
-      "a": "Yes. The API SL/CF rating means it meets both gasoline (SL) and certain diesel (CF) engine requirements, though it is primarily formulated for gasoline engines."
-    },
-    {
-      "q": "Is this oil suitable for turbocharged engines?",
-      "a": "Yes, Bagani Hanan Raze 20W-50 is suitable for turbocharged and multi-valve gasoline engines."
-    },
-    {
-      "q": "How often should I change engine oil?",
-      "a": "Under normal driving conditions, every 5,000–7,500 km. For severe conditions (extreme heat, heavy loads, stop-and-go traffic), every 3,000–5,000 km. Always follow your vehicle manufacturer's recommendation."
-    }
-  ]
+  }
 }

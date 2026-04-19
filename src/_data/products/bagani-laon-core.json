@@ -6,40 +6,108 @@
   "spec": "SAE 10W / 30 / 40 / 50 | API CF/SF | Super Heavy Duty",
   "shortDesc": "Super heavy duty engine oil. Premium protection for diesel and gasoline engines in multiple grades.",
   "image": "/images/products/laon-core.png",
-  "description": "A high-performance motor oil designed to deliver premium protection for both diesel and gasoline engines. Especially formulated for heavy-duty operation in diesel engines used in on-highway and off-highway vehicles and equipment. Available in four grades — SAE 10W, 30, 40, and 50 — for maximum flexibility across different applications.",
+  "description": "A high-performance motor oil designed to deliver premium protection for both diesel and gasoline engines. Especially formulated for heavy-duty operation in diesel engines used in on-highway and off-highway vehicles and equipment. Available in four grades \u00e2\u20ac\u201d SAE 10W, 30, 40, and 50 \u00e2\u20ac\u201d for maximum flexibility across different applications.",
   "benefits": [
-    { "title": "", "desc": "Advanced dispersant technology helps prevent oil thickening caused by incomplete combustion and soot formation." },
-    { "title": "", "desc": "Reduces sludge buildup and keeps particles suspended, extending the life of oil filters." },
-    { "title": "", "desc": "Suitable for gasoline engines as well, providing mixed-fleet operators the convenience of using a single motor oil across all vehicles." }
+    {
+      "title": "",
+      "desc": "Advanced dispersant technology helps prevent oil thickening caused by incomplete combustion and soot formation."
+    },
+    {
+      "title": "",
+      "desc": "Reduces sludge buildup and keeps particles suspended, extending the life of oil filters."
+    },
+    {
+      "title": "",
+      "desc": "Suitable for gasoline engines as well, providing mixed-fleet operators the convenience of using a single motor oil across all vehicles."
+    }
   ],
   "applicationText": "Recommended as a crankcase lubricant for diesel engines in automotive, industrial, and heavy construction equipment, whether naturally aspirated or turbocharged.\n\nIdeal for fleet operations where grade simplification is preferred, also suitable for gasoline engines in passenger cars and trucks following manufacturer maintenance schedules.\n\nSAE 10W and SAE 30 grades meet GMC Allison C-3 requirements for hydraulic transmission fluids, and can be used in automatic transmissions, torque converters, and hydraulic systems requiring this level of quality.",
   "approvalsText": "BAGANI LAON CORE meets the requirements of API CF / CF-2 / SF and is approved to meet the following standards: ACEA E1-96; Mercedes-Benz p.227.0; Caterpillar TO2 & TO4 Friction Test; MIL L-2104D, L-46152B; Allison C-3 / C-4.",
-  "availableSizes": ["200L DRUM", "20L PAIL", "12X1L BOX"],
+  "availableSizes": [
+    "200L DRUM",
+    "20L PAIL",
+    "12X1L BOX"
+  ],
   "typicalProperties": {
-    "grades": ["SAE 10/10W", "SAE 30", "SAE 40", "SAE 50"],
+    "grades": [
+      "SAE 10/10W",
+      "SAE 30",
+      "SAE 40",
+      "SAE 50"
+    ],
     "rows": [
-      { "property": "Specific Gravity @ 15.6 °C", "values": ["0.875", "0.890", "0.893", "0.895"] },
-      { "property": "Flash Point, °C", "values": ["213", "230", "238", "240"] },
-      { "property": "Pour Point, °C", "values": ["-12", "-12", "-12", "-12"] },
-      { "property": "Viscosity @ 40 °C, cSt", "values": ["44", "118", "147", "218"] },
-      { "property": "Viscosity @ 100 °C, cSt", "values": ["6.96", "11.9", "14.5", "19"] },
-      { "property": "Viscosity Index", "values": ["115", "96", "99", "99"] },
-      { "property": "Color, ASTM", "values": ["3", "3", "3.5", "4.0"] },
-      { "property": "TBN, mgKOH/g", "values": ["9.0", "9.0", "9.0", "9.0"] }
+      {
+        "property": "Specific Gravity @ 15.6 \u00c2\u00b0C",
+        "values": [
+          "0.875",
+          "0.890",
+          "0.893",
+          "0.895"
+        ]
+      },
+      {
+        "property": "Flash Point, \u00c2\u00b0C",
+        "values": [
+          "213",
+          "230",
+          "238",
+          "240"
+        ]
+      },
+      {
+        "property": "Pour Point, \u00c2\u00b0C",
+        "values": [
+          "-12",
+          "-12",
+          "-12",
+          "-12"
+        ]
+      },
+      {
+        "property": "Viscosity @ 40 \u00c2\u00b0C, cSt",
+        "values": [
+          "44",
+          "118",
+          "147",
+          "218"
+        ]
+      },
+      {
+        "property": "Viscosity @ 100 \u00c2\u00b0C, cSt",
+        "values": [
+          "6.96",
+          "11.9",
+          "14.5",
+          "19"
+        ]
+      },
+      {
+        "property": "Viscosity Index",
+        "values": [
+          "115",
+          "96",
+          "99",
+          "99"
+        ]
+      },
+      {
+        "property": "Color, ASTM",
+        "values": [
+          "3",
+          "3",
+          "3.5",
+          "4.0"
+        ]
+      },
+      {
+        "property": "TBN, mgKOH/g",
+        "values": [
+          "9.0",
+          "9.0",
+          "9.0",
+          "9.0"
+        ]
+      }
     ]
-  },
-  "faqs": [
-    {
-      "q": "Which SAE grade of Laon Core should I use?",
-      "a": "SAE 30 and 40 are most common for standard operating temperatures. SAE 10W is for colder climates or lighter viscosity needs. SAE 50 is for very high temperatures or heavily loaded engines. Always follow your engine manufacturer's recommendations."
-    },
-    {
-      "q": "Can Laon Core be used in automatic transmissions?",
-      "a": "Yes. The SAE 10W and SAE 30 grades meet GMC Allison C-3 requirements and can be used in automatic transmissions, torque converters, and hydraulic systems where such specifications apply."
-    },
-    {
-      "q": "Is Laon Core suitable for heavy construction equipment?",
-      "a": "Yes. Laon Core is designed for heavy-duty operation in both on-highway and off-highway vehicles and equipment, including construction machinery."
-    }
-  ]
+  }
 }
