@@ -122,6 +122,11 @@ module.exports = function (eleventyConfig) {
 						"specs": specs[]{key, value},
 						features[]{title, desc, icon},
 						applications,
+						benefits[]{title, desc},
+						applicationText,
+						approvalsText,
+						availableSizes,
+						"typicalProperties": typicalProperties{grades, "rows": rows[]{property, values}},
 						faqs[]{q, a}
 					}
 				`);
