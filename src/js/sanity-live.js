@@ -22,57 +22,23 @@
   }
 
   function sanityFetch(query) {
-    var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
     function parseResult(r) {
       if (!r.ok) throw new Error('sanity fetch failed: ' + r.status);
       return r.json().then(function (d) { return d.result; });
     }
 
-    var proxyPath = '/.netlify/functions/sanity-query'
-      + '?projectId=' + encodeURIComponent(PROJECT_ID)
-      + '&dataset=' + encodeURIComponent(DATASET)
-      + '&apiVer=' + encodeURIComponent(API_VER)
-      + '&preview=' + (IS_PREVIEW ? 'true' : 'false')
-      + '&query=' + encodeURIComponent(query);
+    var host = IS_PREVIEW
+      ? 'https://' + PROJECT_ID + '.api.sanity.io'
+      : 'https://' + PROJECT_ID + '.apicdn.sanity.io';
+    var url = host + '/v' + API_VER + '/data/query/' + DATASET + '?query=' + encodeURIComponent(query);
+    if (IS_PREVIEW) url += '&perspective=previewDrafts';
 
+    var opts = {};
     if (IS_PREVIEW && PREVIEW_TOKEN) {
-      proxyPath += '&token=' + encodeURIComponent(PREVIEW_TOKEN);
+      opts.headers = { 'Authorization': 'Bearer ' + PREVIEW_TOKEN };
     }
 
-    var proxyCandidates = [proxyPath];
-    if (window.location.hostname === 'localhost' && window.location.port !== '8888') {
-      proxyCandidates.push('http://localhost:8888' + proxyPath);
-    }
-
-    function tryProxy(index) {
-      if (index >= proxyCandidates.length) return Promise.reject(new Error('proxy unavailable'));
-      return fetch(proxyCandidates[index]).then(function (r) {
-        return parseResult(r);
-      }).catch(function () {
-        return tryProxy(index + 1);
-      });
-    }
-
-    return tryProxy(0).catch(function () {
-      if (isLocalhost) {
-        throw new Error('Local proxy unavailable. Run Netlify dev (npm start) so /.netlify/functions endpoints are served.');
-      }
-
-      // Final fallback keeps existing behavior in environments without function proxy.
-      var host = IS_PREVIEW
-        ? 'https://' + PROJECT_ID + '.api.sanity.io'
-        : 'https://' + PROJECT_ID + '.apicdn.sanity.io';
-      var url = host + '/v' + API_VER + '/data/query/' + DATASET + '?query=' + encodeURIComponent(query);
-      if (IS_PREVIEW) url += '&perspective=previewDrafts';
-
-      var opts = {};
-      if (IS_PREVIEW && PREVIEW_TOKEN) {
-        opts.headers = { 'Authorization': 'Bearer ' + PREVIEW_TOKEN };
-      }
-
-      return fetch(url, opts).then(parseResult);
-    });
+    return fetch(url, opts).then(parseResult);
   }
 
   function reInitWow() {
@@ -220,7 +186,7 @@
       return Promise.resolve(cached.items);
     }
 
-    var endpoint = '/.netlify/functions/external-news' + (forceRefresh ? ('?refresh=' + Date.now()) : '');
+    var endpoint = '/api/external-news.php' + (forceRefresh ? ('?refresh=' + Date.now()) : '');
 
     return fetch(endpoint, { cache: forceRefresh ? 'no-store' : 'default' })
       .then(function (r) {
