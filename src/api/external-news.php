@@ -14,8 +14,10 @@ $articles = [];
 
 foreach ($feeds as $feedUrl) {
   $ctx = stream_context_create(['http' => ['timeout' => 5]]);
-  $xml = @simplexml_load_file($feedUrl, 'SimpleXMLElement', 0, null, false);
+  $xml = @simplexml_load_file($feedUrl, 'SimpleXMLElement', LIBXML_NOCDATA, null, false);
   if (!$xml) continue;
+
+  $namespaces = $xml->getNamespaces(true);
 
   $items = isset($xml->channel->item) ? $xml->channel->item : [];
   foreach ($items as $item) {
@@ -23,6 +25,33 @@ foreach ($feeds as $feedUrl) {
     $desc  = strip_tags((string)($item->description ?? ''));
     $link  = (string)($item->link ?? '');
     $date  = (string)($item->pubDate ?? '');
+
+    // Try to extract image
+    $image = '';
+    // Try enclosure tag
+    if (isset($item->enclosure)) {
+      $encType = (string)($item->enclosure['type'] ?? '');
+      if (strpos($encType, 'image') !== false) {
+        $image = (string)($item->enclosure['url'] ?? '');
+      }
+    }
+    // Try media:content or media:thumbnail
+    if (!$image && isset($namespaces['media'])) {
+      $media = $item->children($namespaces['media']);
+      if (isset($media->content)) {
+        $image = (string)($media->content['url'] ?? '');
+      }
+      if (!$image && isset($media->thumbnail)) {
+        $image = (string)($media->thumbnail['url'] ?? '');
+      }
+    }
+    // Try image tag inside description HTML
+    if (!$image) {
+      $rawDesc = (string)($item->description ?? '');
+      if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/', $rawDesc, $m)) {
+        $image = $m[1];
+      }
+    }
 
     $matched = false;
     foreach ($keywords as $kw) {
@@ -37,7 +66,8 @@ foreach ($feeds as $feedUrl) {
         'link'        => $link,
         'pubDate'     => $date,
         'description' => mb_substr($desc, 0, 200),
-        'source'      => parse_url($feedUrl, PHP_URL_HOST)
+        'source'      => parse_url($feedUrl, PHP_URL_HOST),
+        'image'       => $image
       ];
     }
   }

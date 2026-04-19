@@ -149,7 +149,7 @@
 
   var _extModalEventsBound = false;
 
-  var EXTERNAL_NEWS_CACHE_KEY = 'bagani-external-news-cache-v8';
+  var EXTERNAL_NEWS_CACHE_KEY = 'bagani-external-news-cache-v9';
   var EXTERNAL_NEWS_CACHE_TTL_MS = 30 * 60 * 1000;
 
   function readExternalNewsCache() {

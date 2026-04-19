@@ -92,13 +92,12 @@
 	/* Product Lines — services card slider (always on) */
 	if (document.querySelector('.services-list-swiper')) {
 		const servicesListSwiper = new Swiper('.services-list-swiper', {
-			slidesPerView: 1.2,
-			spaceBetween: 40,
+			slidesPerView: 1,
+			spaceBetween: 20,
 			loop: true,
-			centeredSlides: true,
+			centeredSlides: false,
 			grabCursor: true,
-			speed: 800,
-			slideToClickedSlide: true,
+			speed: 600,
 			navigation: {
 				nextEl: '.services-swiper-next',
 				prevEl: '.services-swiper-prev',
@@ -110,15 +109,15 @@
 			breakpoints: {
 				576: {
 					slidesPerView: 2,
-					spaceBetween: 50,
+					spaceBetween: 20,
 				},
 				992: {
 					slidesPerView: 3,
-					spaceBetween: 60,
+					spaceBetween: 24,
 				},
 				1200: {
-					slidesPerView: 3.5,
-					spaceBetween: 80,
+					slidesPerView: 4,
+					spaceBetween: 24,
 				},
 			},
 		});
