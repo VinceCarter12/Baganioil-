@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
-// Change this to your Netlify URL when deployed
-const PREVIEW_BASE = 'http://localhost:8080'
+const PREVIEW_BASE = 'https://sub.baganioil.ph'
 // Set SANITY_STUDIO_PREVIEW_TOKEN in your .env to enable draft fetching
 const PREVIEW_TOKEN = (typeof process !== 'undefined' && process.env?.SANITY_STUDIO_PREVIEW_TOKEN) || ''
 
