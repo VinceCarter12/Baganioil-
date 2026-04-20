@@ -8076,7 +8076,7 @@ body[data-page="home"] .hero.hero-video {
 /* ───────────────────────────────────────────────
    Product Grid & Cards
    ─────────────────────────────────────────────── */
-.nike-shop-grid { flex-grow: 1; width: 100%; min-width: 0; overflow: hidden; }
+.nike-shop-grid { flex-grow: 1; width: 100%; min-width: 0; }
 
 .row.project-item-boxes {
     display: grid !important;

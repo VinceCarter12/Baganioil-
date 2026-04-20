@@ -157,13 +157,21 @@ window.addEventListener('load', function() {
 
     // ── Filter ──────────────────────────────────────────────────────────────
     function applyCurrentFilters() {
-        var filters = [];
-        document.querySelectorAll('.filter-check:checked').forEach(function(el) {
-            filters.push(el.value.replace('.', ''));
+        // Collect active filters grouped by filter-group (AND across groups, OR within group)
+        var groupFilters = [];
+        document.querySelectorAll('.filter-group').forEach(function(group) {
+            var checked = [];
+            group.querySelectorAll('.filter-check:checked').forEach(function(el) {
+                checked.push(el.value.replace('.', ''));
+            });
+            if (checked.length > 0) groupFilters.push(checked);
         });
+
         var count = 0;
         document.querySelectorAll('#sanity-products-grid .project-item-box').forEach(function(item) {
-            var show = filters.length === 0 || filters.some(function(f) { return item.classList.contains(f); });
+            var show = groupFilters.length === 0 || groupFilters.every(function(group) {
+                return group.some(function(f) { return item.classList.contains(f); });
+            });
             item.style.display = show ? '' : 'none';
             if (show) count++;
         });

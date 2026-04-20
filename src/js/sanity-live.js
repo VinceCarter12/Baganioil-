@@ -673,12 +673,12 @@
           var cls = (p.category || '').toLowerCase();
           var v = ((p.viscosity || p.spec || '')).toLowerCase();
           if (v.indexOf('10w-40') > -1) cls += ' v10w40';
-          else if (v.indexOf('15w-40') > -1) cls += ' v15w40';
-          else if (v.indexOf('20w-40') > -1) cls += ' v20w40';
-          else if (v.indexOf('20w-50') > -1) cls += ' v20w50';
-          else if (v.indexOf('0w-20') > -1) cls += ' v0w20';
-          else if (v.indexOf('sae 90') > -1 || v.indexOf('sae 140') > -1) cls += ' vsae90';
-          else if (v.indexOf('sae 40') > -1) cls += ' vsae40';
+          if (v.indexOf('15w-40') > -1) cls += ' v15w40';
+          if (v.indexOf('20w-40') > -1) cls += ' v20w40';
+          if (v.indexOf('20w-50') > -1) cls += ' v20w50';
+          if (v.indexOf('0w-20') > -1) cls += ' v0w20';
+          if (v.indexOf('sae 90') > -1 || v.indexOf('sae 140') > -1) cls += ' vsae90';
+          if (v.indexOf('sae 40') > -1 && v.indexOf('10w-40') === -1 && v.indexOf('15w-40') === -1 && v.indexOf('20w-40') === -1) cls += ' vsae40';
           var e = (p.engineType || '').toLowerCase();
           if (e.indexOf('diesel') > -1) cls += ' diesel';
           if (e.indexOf('motorcycle') > -1 || e.indexOf('scooter') > -1) cls += ' motorcycle-scooter';
