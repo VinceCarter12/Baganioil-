@@ -7932,8 +7932,9 @@ body[data-page="home"] .hero.hero-video {
 .bagani-nike-shop {
     background-color: #ffffff;
     color: #111111;
-    padding: 40px 0 120px 0;
-    overflow: clip;
+    padding: 40px 0 80px 0;
+    overflow: visible;
+    position: relative;
 }
 
 .nike-shop-container {
