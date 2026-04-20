@@ -49,4 +49,5 @@ jobs:
           server-dir: /public_html/
           protocol: ftps
           security: loose
-          timeout: 120000
+          timeout: 300000
+          retry-count: 3
