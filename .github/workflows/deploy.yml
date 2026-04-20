@@ -39,13 +39,11 @@ jobs:
             exit 1
           fi
 
-      - name: Deploy via SCP to Hostinger
-        uses: appleboy/scp-action@v0.1.7
+      - name: Push built site to deploy branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          host: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          source: "_site/."
-          target: "/home/${{ secrets.FTP_USERNAME }}/public_html/"
-          rm: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: deploy
+          publish_dir: ./_site
+          force_orphan: true
+          commit_message: "Deploy built site"
