@@ -183,7 +183,6 @@ module.exports = function (eleventyConfig) {
 	eleventyConfig.addPassthroughCopy("src/webfonts");
 	eleventyConfig.addPassthroughCopy("src/admin");
 	eleventyConfig.addPassthroughCopy("src/.htaccess");
-	eleventyConfig.addPassthroughCopy("src/chat.php");
 	eleventyConfig.addPassthroughCopy("src/api");
 
 	// Products: Sanity first, fallback to local JSON files
