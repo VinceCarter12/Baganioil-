@@ -35,24 +35,7 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
       - name: Inject API key into chat.php
-        run: |
-          python3 - <<'PYEOF'
-import os, sys
-key = os.environ.get('GROQ_API_KEY', '')
-if not key:
-    print('Warning: GROQ_API_KEY not set — chat.php will fall back to browser API.')
-    sys.exit(0)
-path = '_site/chat.php'
-with open(path, 'r') as f:
-    content = f.read()
-if '__GROQ_API_KEY__' not in content:
-    print('Placeholder not found in chat.php — already replaced or missing.')
-    sys.exit(0)
-content = content.replace('__GROQ_API_KEY__', key)
-with open(path, 'w') as f:
-    f.write(content)
-print('chat.php key injected successfully.')
-PYEOF
+        run: node -e "const fs=require('fs');const k=process.env.GROQ_API_KEY||'';if(!k){console.log('No GROQ_API_KEY set, skipping.');process.exit(0);}const c=fs.readFileSync('_site/chat.php','utf8');fs.writeFileSync('_site/chat.php',c.replace('__GROQ_API_KEY__',k));console.log('chat.php key injected.');"
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
