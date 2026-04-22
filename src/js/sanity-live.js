@@ -667,7 +667,7 @@
         if (countEl) countEl.textContent = products.length;
 
         function getFilterClasses(p) {
-          var cls = (p.category || '').toLowerCase();
+          var cls = (p.line || '').toLowerCase();
           var v = ((p.viscosity || p.spec || '')).toLowerCase();
           if (v.indexOf('10w-40') > -1) cls += ' v10w40';
           if (v.indexOf('15w-40') > -1) cls += ' v15w40';
