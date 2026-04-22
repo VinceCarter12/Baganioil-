@@ -9527,3 +9527,35 @@ body[data-page="home"] .hero.hero-video {
         font-size: 22px;
     }
 }
+
+/* ── Mobile-only fixes (≤991px) ──────────────────────────────────────────── */
+@media (max-width: 991px) {
+    /* Product detail page: hide sidebar (Product Lines + Need Help) */
+    .page-service-single .service-sidebar {
+        display: none;
+    }
+
+    /* Product detail page: center Download PDF button when line badge is hidden */
+    .product-meta-bar {
+        justify-content: center;
+    }
+
+    /* Product detail page: hide the category/line badge (e.g. AMIHAN) */
+    .product-line {
+        display: none;
+    }
+
+    /* Product listing cards: hide Download PDF + View Details footer on mobile */
+    /* Users tap the product image/card to view details */
+    .bagani-product-footer {
+        display: none;
+    }
+
+    /* Product listing cards: make image fill the full card (Nike-style) */
+    .bagani-product-img-wrap {
+        border-radius: 0;
+    }
+    .project-item-box {
+        flex-direction: column;
+    }
+}
