@@ -2369,8 +2369,9 @@ body[data-page="home"] .hero.hero-video {
 		padding: 30px 20px 35px 20px;
 	}
 	.services-list-swiper .service-item .icon-box {
-		height: 175px;
-		margin: -10px -10px 30px auto;
+		height: 240px;
+		width: 240px;
+		margin: -20px -20px 40px auto;
 	}
 	.service-item .service-body .category-name {
 		font-size: 18px;
@@ -9233,6 +9234,11 @@ body[data-page="home"] .hero.hero-video {
     min-width: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
+}
+
+#sanity-products-grid > .project-item-box.filter-hidden {
+    display: none !important;
+    visibility: hidden !important;
 }
 
 #sanity-products-grid > .project-item-box .bagani-product-item {

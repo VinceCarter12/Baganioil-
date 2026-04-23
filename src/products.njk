@@ -174,7 +174,7 @@ window.baganiApplyFilters = function() {
                 return false;
             });
         });
-        item.style.display = show ? '' : 'none';
+        item.classList.toggle('filter-hidden', !show);
         if (show) count++;
     });
     var countEl = document.getElementById('product-count');
