@@ -435,45 +435,39 @@ activePage: home
         </div>
 
         <div class="row">
-            <div class="col-md-6">
-                <div class="post-item wow fadeInUp">
-                    <div class="post-featured-image">
-                        <figure>
-                            <a href="/news-single/" class="image-anime" data-cursor-text="View">
-                                <img src="/images/blog-1.jpg" alt="" loading="lazy">
-                            </a>
-                        </figure>
-                    </div>
-                    <div class="post-item-body">
-                        <div class="post-item-content">
-                            <h2><a href="/news-single/">Bagani Launches New Amihan Tempest 4T Premium Oil</a></h2>
+            {% if articlesList and articlesList.length > 0 %}
+                {% for article in articlesList %}
+                    {% if loop.index0 < 2 %}
+                    <div class="col-md-6">
+                        <div class="post-item wow fadeInUp">
+                            <div class="post-featured-image">
+                                <figure>
+                                    <a href="/news/{{ article.slug }}/" class="image-anime" data-cursor-text="View">
+                                        {% if article.image %}
+                                            <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy">
+                                        {% else %}
+                                            <img src="/images/blog-{{ loop.index }}.jpg" alt="{{ article.title }}" loading="lazy">
+                                        {% endif %}
+                                    </a>
+                                </figure>
+                            </div>
+                            <div class="post-item-body">
+                                <div class="post-item-content">
+                                    <h2><a href="/news/{{ article.slug }}/">{{ article.title }}</a></h2>
+                                </div>
+                                <div class="post-item-btn">
+                                    <a href="/news/{{ article.slug }}/"><img src="/images/arrow-white.svg" alt="" loading="lazy"></a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="post-item-btn">
-                            <a href="/news-single/"><img src="/images/arrow-white.svg" alt="" loading="lazy"></a>
-                        </div>
                     </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <p style="color: #aaa;">Walang anunsyo sa ngayon.</p>
                 </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="post-item wow fadeInUp">
-                    <div class="post-featured-image">
-                        <figure>
-                            <a href="/news-single/" class="image-anime" data-cursor-text="View">
-                                <img src="/images/blog-2.jpg" alt="" loading="lazy">
-                            </a>
-                        </figure>
-                    </div>
-                    <div class="post-item-body">
-                        <div class="post-item-content">
-                            <h2><a href="/news-single/">Bagani Joins Manila Motorcycle Festival 2026</a></h2>
-                        </div>
-                        <div class="post-item-btn">
-                            <a href="/news-single/"><img src="/images/arrow-white.svg" alt="" loading="lazy"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
         <div class="row mt-4">
             <div class="col-12 text-center">

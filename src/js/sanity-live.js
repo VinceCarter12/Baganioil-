@@ -581,7 +581,7 @@
 
     container.innerHTML = '<div style="text-align:center;padding:80px 0"><p style="color:#aaa">Loading article...</p></div>';
 
-    sanityFetch('*[_type == "article" && slug.current == "' + slug.replace(/"/g, '') + '"][0] { title, date, category, "image": image.asset->url, excerpt, tags, body }')
+    sanityFetch('*[_type == "article" && slug.current == "' + slug.replace(/"/g, '') + '"][0] { title, date, category, "image": image.asset->url, "video": video.asset->url, excerpt, tags, body }')
       .then(function (article) {
         if (!article) {
           container.innerHTML = '<p style="text-align:center;padding:60px 0;color:#888">Article not found.</p>';
@@ -633,6 +633,7 @@
         container.innerHTML =
           '<article class="bagani-article-shell">' +
             (article.image ? '<div class="post-image bagani-article-hero"><figure><img src="' + article.image + '" alt="' + escHtml(article.title || '') + '" style="width:100%"></figure></div>' : '') +
+            (article.video ? '<div class="bagani-article-video" style="margin:0 0 30px"><video controls style="width:100%;border-radius:8px;max-height:480px"><source src="' + article.video + '">Your browser does not support video playback.</video></div>' : '') +
             '<div class="post-content bagani-article-content">' +
               '<div class="bagani-article-meta wow fadeInUp">' +
                 '<span class="mag-tag ' + baganiCategoryClass(type) + '">' + type + '</span>' +

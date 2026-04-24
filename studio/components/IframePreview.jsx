@@ -22,9 +22,6 @@ function buildPreviewUrl(doc) {
       return `${PREVIEW_BASE}/store-locator/?preview=true${tokenParam}`
     case 'faq':
       return `${PREVIEW_BASE}/faqs/?preview=true${tokenParam}`
-    case 'homepage':
-    case 'siteSettings':
-      return `${PREVIEW_BASE}/?preview=true${tokenParam}`
     default:
       return null
   }

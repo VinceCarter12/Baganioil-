@@ -2,12 +2,11 @@ import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {
-  HomeIcon,
-  CogIcon,
   PackageIcon,
   DocumentsIcon,
   PinIcon,
   HelpCircleIcon,
+  BellIcon,
 } from '@sanity/icons'
 import {schemaTypes} from './schemas'
 import {IframePreview} from './components/IframePreview'
@@ -17,38 +16,6 @@ const structure = (S) =>
   S.list()
     .title('Bagani Oil CMS')
     .items([
-      // --- Singletons ---
-      S.listItem()
-        .title('Site Settings')
-        .id('siteSettings')
-        .icon(CogIcon)
-        .child(
-          S.document()
-            .schemaType('siteSettings')
-            .documentId('siteSettings')
-            .title('Site Settings')
-            .views([
-              S.view.form(),
-              S.view.component(IframePreview).title('Preview'),
-            ]),
-        ),
-      S.listItem()
-        .title('Homepage Content')
-        .id('homepage')
-        .icon(HomeIcon)
-        .child(
-          S.document()
-            .schemaType('homepage')
-            .documentId('homepage')
-            .title('Homepage Content')
-            .views([
-              S.view.form(),
-              S.view.component(IframePreview).title('Preview'),
-            ]),
-        ),
-
-      S.divider(),
-
       // --- Collections ---
       S.listItem()
         .title('Products')
@@ -113,6 +80,18 @@ const structure = (S) =>
                   S.view.component(IframePreview).title('Preview'),
                 ]),
             ),
+        ),
+
+      S.divider(),
+
+      // --- AI Chatbot ---
+      S.listItem()
+        .title('Chat Logs')
+        .icon(BellIcon)
+        .child(
+          S.documentTypeList('chatLog')
+            .title('Chat Logs')
+            .defaultOrdering([{field: 'timestamp', direction: 'desc'}]),
         ),
     ])
 
