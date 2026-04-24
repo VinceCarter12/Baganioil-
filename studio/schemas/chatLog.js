@@ -7,6 +7,7 @@ export default defineType({
   type: 'document',
   icon: BellIcon,
   readOnly: true,
+  __experimental_actions: ['update', 'discardChanges'],
   fields: [
     defineField({
       name: 'sessionId',

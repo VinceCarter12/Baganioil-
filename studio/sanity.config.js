@@ -89,9 +89,12 @@ const structure = (S) =>
         .title('Chat Logs')
         .icon(BellIcon)
         .child(
-          S.documentTypeList('chatLog')
+          S.documentList()
             .title('Chat Logs')
-            .defaultOrdering([{field: 'timestamp', direction: 'desc'}]),
+            .schemaType('chatLog')
+            .filter('_type == "chatLog"')
+            .defaultOrdering([{field: 'timestamp', direction: 'desc'}])
+            .canHandleIntent((intent) => intent !== 'create'),
         ),
     ])
 
