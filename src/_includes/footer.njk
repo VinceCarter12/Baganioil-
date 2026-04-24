@@ -48,8 +48,9 @@
                 <div class="footer-links">
                     <h3>Info</h3>
                     <ul>
-                        <li><a href="#">term & condition</a></li>
-                        <li><a href="#">privacy policy</a></li>
+                        {# HIDDEN TEMPORARILY — uncomment to restore #}
+                        {# <li><a href="#">term & condition</a></li> #}
+                        {# <li><a href="#">privacy policy</a></li> #}
                         <li><a href="/faqs/">FAQ</a></li>
                         <li><a href="/contact/">contact us</a></li>
                     </ul>
@@ -61,7 +62,7 @@
                     <h3>Contact</h3>
                     <ul>
                         <li>{{ site.phone }}</li>
-                        <li>{{ site.email }}</li>
+                        <li style="text-transform: none;">{{ site.email }}</li>
                         <li>{{ site.address }}</li>
                     </ul>
                 </div>
