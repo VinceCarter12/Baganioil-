@@ -434,41 +434,49 @@ activePage: home
             </div>
         </div>
 
-        <div class="row">
-            {% if articlesList and articlesList.length > 0 %}
-                {% for article in articlesList %}
-                    {% if loop.index0 < 2 %}
-                    <div class="col-md-6">
-                        <div class="post-item wow fadeInUp">
-                            <div class="post-featured-image">
-                                <figure>
-                                    <a href="/news/{{ article.slug }}/" class="image-anime" data-cursor-text="View">
-                                        {% if article.image %}
-                                            <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy">
-                                        {% else %}
-                                            <img src="/images/blog-{{ loop.index }}.jpg" alt="{{ article.title }}" loading="lazy">
-                                        {% endif %}
-                                    </a>
-                                </figure>
-                            </div>
-                            <div class="post-item-body">
-                                <div class="post-item-content">
-                                    <h2><a href="/news/{{ article.slug }}/">{{ article.title }}</a></h2>
-                                </div>
-                                <div class="post-item-btn">
-                                    <a href="/news/{{ article.slug }}/"><img src="/images/arrow-white.svg" alt="" loading="lazy"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <div class="col-12 text-center py-5">
-                    <p style="color: #aaa;">Walang anunsyo sa ngayon.</p>
-                </div>
-            {% endif %}
+        <div class="row" id="homepage-news-grid">
+            <div class="col-12 text-center py-4">
+                <p style="color:#aaa;">Loading latest news...</p>
+            </div>
         </div>
+        <script>
+        (function() {
+            var grid = document.getElementById('homepage-news-grid');
+            if (!grid) return;
+            var query = '*[_type == "article"] | order(date desc) [0..1] {"slug": slug.current, title, "image": image.asset->url}';
+            var url = 'https://c7mgn6k7.apicdn.sanity.io/v2024-01-01/data/query/production?query=' + encodeURIComponent(query);
+            fetch(url)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var articles = (data.result || []).filter(function(a) { return a && a.slug; });
+                    if (!articles.length) {
+                        grid.innerHTML = '<div class="col-12 text-center py-5"><p style="color:#aaa;">Walang anunsyo sa ngayon.</p></div>';
+                        return;
+                    }
+                    var html = '';
+                    articles.forEach(function(a) {
+                        var href = '/news/' + a.slug + '/';
+                        var title = (a.title || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                        var img = a.image
+                            ? '<img src="' + a.image + '" alt="' + title + '" loading="lazy">'
+                            : '<img src="/images/blog-1.jpg" alt="' + title + '" loading="lazy">';
+                        html += '<div class="col-md-6">'
+                            + '<div class="post-item wow fadeInUp">'
+                            + '<div class="post-featured-image"><figure>'
+                            + '<a href="' + href + '" class="image-anime" data-cursor-text="View">' + img + '</a>'
+                            + '</figure></div>'
+                            + '<div class="post-item-body">'
+                            + '<div class="post-item-content"><h2><a href="' + href + '">' + title + '</a></h2></div>'
+                            + '<div class="post-item-btn"><a href="' + href + '"><img src="/images/arrow-white.svg" alt="" loading="lazy"></a></div>'
+                            + '</div></div></div>';
+                    });
+                    grid.innerHTML = html;
+                })
+                .catch(function() {
+                    grid.innerHTML = '<div class="col-12 text-center py-5"><p style="color:#aaa;">Walang anunsyo sa ngayon.</p></div>';
+                });
+        })();
+        </script>
         <div class="row mt-4">
             <div class="col-12 text-center">
                 <a href="/news/" class="btn btn-warning fw-bold px-4 py-2" style="background-color: #FFC107; color: #1c1c1c; border: none; border-radius: 6px;">More News</a>
